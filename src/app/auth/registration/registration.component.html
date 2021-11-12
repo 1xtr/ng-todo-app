@@ -1,0 +1,41 @@
+<form class="xtr-auth-form" [formGroup]="regForm">
+
+  <mat-form-field appearance="fill">
+    <mat-label>Enter your email</mat-label>
+    <input matInput placeholder="pat@example.com" formControlName="email" required>
+    <mat-error *ngIf="regForm.controls['email'].invalid">{{getErrorMessage()}}</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill"
+                  matTooltip="Password must contain at least eight characters, at least one number and both lower and uppercase letters and special characters"
+                  matTooltipPosition='above'>
+    <mat-label>Enter your password</mat-label>
+    <input
+      matInput
+      [type]="showPasswordToggle ? 'password' : 'text'"
+      formControlName="password"
+    >
+    <button mat-icon-button matSuffix (click)="showPasswordToggle = !showPasswordToggle" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="showPasswordToggle">
+      <mat-icon>{{showPasswordToggle ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    <mat-error *ngIf="regForm.controls['password'].errors?.['pattern']">Password must be strong</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Re-enter your password</mat-label>
+    <input matInput [type]="showPasswordToggle ? 'password' : 'text'" formControlName="confirmPassword">
+    <button mat-icon-button matSuffix (click)="showPasswordToggle = !showPasswordToggle" [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="showPasswordToggle">
+      <mat-icon>{{showPasswordToggle ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    <mat-error *ngIf="regForm.controls['confirmPassword']">Passwords do not match</mat-error>
+  </mat-form-field>
+
+  <mat-divider></mat-divider>
+  <div class="xtr-auth-form__ctrl">
+    <button mat-raised-button color="primary">Registration</button>
+  </div>
+
+</form>
+<pre>{{regForm | json}}</pre>

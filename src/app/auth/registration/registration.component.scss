@@ -1,0 +1,8 @@
+.xtr-auth-form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  &__ctrl {
+    margin-top: 0.5rem;
+  }
+}

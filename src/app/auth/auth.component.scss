@@ -1,0 +1,20 @@
+.xtr-auth-container {
+  min-width: 288px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.xtr-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+}
+
+.active-link {
+  color: #F20B22;
+  border-bottom: 3px solid #673AB7;
+}

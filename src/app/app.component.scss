@@ -1,0 +1,29 @@
+.xtr-container {
+  min-width: 288px;
+  padding: 0 1rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 575.98px){
+  .xtr-container {
+    padding: 0 calc(50vw - 270px);
+  }
+}
+
+@media (min-width: 767.98px){
+  .xtr-container {
+    padding: 0 calc(50vw - 360px);
+  }
+}
+
+@media (min-width: 991.98px) {
+  .xtr-container {
+    padding: 0 calc(50vw - 480px);
+  }
+}
+
+@media (min-width: 1199.98px){
+  .xtr-container {
+    padding: 0 calc(50vw - 590px);
+  }
+}
