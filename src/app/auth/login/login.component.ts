@@ -8,23 +8,26 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class LoginComponent implements OnInit {
 
-  form: FormGroup | undefined
-  hide = true
+  showPasswordToggle = true
 
-  email = new FormControl('', [Validators.required, Validators.email]);
+  loginForm: FormGroup = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+  })
+
+
 
   getErrorMessage() {
-    if (this.email.hasError('required')) {
+    if (this.loginForm.controls['email'].hasError('required')) {
       return 'You must enter a value';
     }
 
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+    return this.loginForm.controls['email'].hasError('email') ? 'Not a valid email' : '';
   }
 
   constructor() { }
 
   ngOnInit(): void {
-    // this.form = new FormGroup()
   }
 
 }

@@ -29,13 +29,13 @@
             [attr.aria-pressed]="showPasswordToggle">
       <mat-icon>{{showPasswordToggle ? 'visibility_off' : 'visibility'}}</mat-icon>
     </button>
-    <mat-error *ngIf="regForm.controls['confirmPassword']">Passwords do not match</mat-error>
+    <mat-error *ngIf="regForm.errors?.['NoPasswordMatch']">Passwords do not match</mat-error>
+<!--     TODO не срабатывает после touch, валидатор работает, mat-error не отображается-->
   </mat-form-field>
 
   <mat-divider></mat-divider>
   <div class="xtr-auth-form__ctrl">
-    <button mat-raised-button color="primary">Registration</button>
+    <button mat-raised-button color="primary" [disabled]="regForm.invalid">Registration</button>
   </div>
 
 </form>
-<pre>{{regForm | json}}</pre>

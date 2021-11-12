@@ -19,7 +19,7 @@ export class RegistrationComponent implements OnInit {
     confirmPassword: new FormControl('', [
       Validators.required,
     ])
-  }, {validators: CustomValidator.passwordMatchValidator})
+  }, [CustomValidator.passwordMatchValidator])
 
 
   constructor() {
