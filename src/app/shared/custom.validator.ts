@@ -1,4 +1,4 @@
-import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from "@angular/forms";
+import {AbstractControl, FormArray, FormGroup, ValidationErrors, ValidatorFn} from "@angular/forms";
 
 export class CustomValidator {
   static passwordMatch(controlName: string, matchControlName: string): ValidatorFn {
@@ -7,7 +7,7 @@ export class CustomValidator {
       const password = formGroup?.get(controlName)?.value
       const confirmPassword = formGroup?.get(matchControlName)?.value
       if (password !== confirmPassword) {
-          return {'noPasswordMatch': true}
+        return {'noPasswordMatch': true}
       }
       return null
     }
