@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-
-  constructor() { }
+  isForgotPasswordPage: boolean = false
+  constructor(private router: Router) {
+  }
 
   ngOnInit(): void {
+    if (this.router.url === '/auth/forgot-password') {
+      this.isForgotPasswordPage = true
+    }
   }
 
 }

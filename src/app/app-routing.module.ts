@@ -5,6 +5,7 @@ import {AboutComponent} from "./about/about.component";
 import {AuthComponent} from "./auth/auth.component";
 import {LoginComponent} from "./auth/login/login.component";
 import {RegistrationComponent} from "./auth/registration/registration.component";
+import {ForgotPasswordComponent} from "./auth/forgot-password/forgot-password.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -13,6 +14,7 @@ const routes: Routes = [
       {path: '', redirectTo: '/auth/login', pathMatch: 'full'},
       {path: 'login', component: LoginComponent},
       {path: 'registration', component: RegistrationComponent},
+      {path: 'forgot-password', component: ForgotPasswordComponent},
     ]},
 
 ];

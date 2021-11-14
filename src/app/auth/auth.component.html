@@ -1,5 +1,5 @@
 <div class="xtr-center">
-  <nav mat-tab-nav-bar class="xtr-center" mat-align-tabs="center">
+  <nav mat-tab-nav-bar class="xtr-center" mat-align-tabs="center" *ngIf="!isForgotPasswordPage">
     <a mat-tab-link routerLink="/auth/login" routerLinkActive="active-link">Authorization</a>
     <a mat-tab-link routerLink="/auth/registration" routerLinkActive="active-link">Registration</a>
   </nav>
