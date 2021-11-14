@@ -1,29 +1,16 @@
-// import { FormGroup } from '@angular/forms';
-//
-// export function ConfirmedValidator(controlName: string, matchingControlName: string){
-//   return (formGroup: FormGroup) => {
-//     const control = formGroup.controls[controlName];
-//     const matchingControl = formGroup.controls[matchingControlName];
-//     if (matchingControl.errors && !matchingControl.errors['confirmedValidator']) {
-//       return;
-//     }
-//     if (control.value !== matchingControl.value) {
-//       matchingControl.setErrors({ confirmedValidator: true });
-//     } else {
-//       matchingControl.setErrors(null);
-//     }
-//   }
-// }
-
-import {AbstractControl, ValidationErrors} from "@angular/forms";
+import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from "@angular/forms";
 
 export class CustomValidator {
-  static passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
-    const password: string = control.get('password')?.value
-    const confirmPassword: string = control.get('confirmPassword')?.value
-    if (password !== confirmPassword) {
-      return ({NoPasswordMatch: true});
+  static passwordMatch(controlName: string, matchControlName: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const formGroup: FormGroup | FormArray | null = control.parent
+      const password = formGroup?.get(controlName)?.value
+      const confirmPassword = formGroup?.get(matchControlName)?.value
+      if (password !== confirmPassword) {
+          return {'noPasswordMatch': true}
+      }
+      return null
     }
-    return null
   }
+
 }

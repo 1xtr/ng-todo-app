@@ -18,8 +18,9 @@ export class RegistrationComponent implements OnInit {
     ]),
     confirmPassword: new FormControl('', [
       Validators.required,
+      CustomValidator.passwordMatch('password', 'confirmPassword')
     ])
-  }, [CustomValidator.passwordMatchValidator])
+  })
 
 
   constructor() {
@@ -34,6 +35,10 @@ export class RegistrationComponent implements OnInit {
     }
 
     return this.regForm.controls['email'].hasError('email') ? 'Not a valid email' : '';
+  }
+
+  regFormSubmit() {
+    console.log('Form', this.regForm)
   }
 
 }
