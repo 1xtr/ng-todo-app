@@ -25,6 +25,8 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarConfig, MatSnackBarModule} from "@angular/material/snack-bar";
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { PageErrorComponent } from './page-error/page-error.component';
+import {MatMenuModule} from "@angular/material/menu";
+import { ProfileComponent } from './profile/profile.component';
 
 const matSnackbarDefaultConfig: MatSnackBarConfig = {
   verticalPosition: 'bottom',
@@ -46,6 +48,7 @@ const matSnackbarDefaultConfig: MatSnackBarConfig = {
     CreateTodoListComponent,
     ForgotPasswordComponent,
     PageErrorComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -62,7 +65,8 @@ const matSnackbarDefaultConfig: MatSnackBarConfig = {
     MatDividerModule,
     MatTabsModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatMenuModule
   ],
   providers: [
     {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: matSnackbarDefaultConfig}
