@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../_services/user.service";
 import {SnackBarService} from "../../_services/snack-bar.service";
@@ -30,9 +30,8 @@ export class LoginComponent {
     private appUserService: UserService,
     private appSnackbarService: SnackBarService,
     private router: Router,
-  ) { }
-
-
+  ) {
+  }
 
   loginFormSubmit() {
     if (this.loginForm.invalid) {
@@ -43,11 +42,11 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           this.appUserService.userData = response
-          this.appUserService.isAuthenticated = true
+          this.appUserService.isAuthenticated$.next(true)
           this.appSnackbarService.success(`Login success!`)
         },
         error: () => {
-            this.appSnackbarService.error('Email or password incorrect!')
+          this.appSnackbarService.error('Email or password incorrect!')
         },
         complete: () => {
           this.loginForm.reset()

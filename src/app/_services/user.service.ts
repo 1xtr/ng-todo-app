@@ -1,7 +1,7 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
 
 export interface IRegistrationResponseData {
   email: string,
@@ -37,7 +37,7 @@ export interface IForgotPasswordResponseData {
 })
 export class UserService implements OnInit {
   userData: ILoginResponseData | {} = {}
-  isAuthenticated: boolean = false
+  isAuthenticated$: Subject<boolean> = new Subject<boolean>()
 
   constructor(
     private http: HttpClient,
@@ -45,6 +45,7 @@ export class UserService implements OnInit {
   }
 
   ngOnInit(): void {
+
   }
 
   register(email: string, password: string): Observable<IRegistrationResponseData | HttpErrorResponse> {
@@ -69,9 +70,10 @@ export class UserService implements OnInit {
   }
 
   logout() {
-    this.isAuthenticated = false
+    this.isAuthenticated$.next(false)
     this.userData = {}
   }
+
 
   getUserByEmail(email: string): Observable<IForgotPasswordResponseData> {
     return this.http.post<IForgotPasswordResponseData>(
