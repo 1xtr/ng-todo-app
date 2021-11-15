@@ -24,6 +24,7 @@ import { CreateTodoListComponent } from './create-todo-list/create-todo-list.com
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSnackBarConfig, MatSnackBarModule} from "@angular/material/snack-bar";
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
+import { PageErrorComponent } from './page-error/page-error.component';
 
 const matSnackbarDefaultConfig: MatSnackBarConfig = {
   verticalPosition: 'bottom',
@@ -44,6 +45,7 @@ const matSnackbarDefaultConfig: MatSnackBarConfig = {
     TodoListComponent,
     CreateTodoListComponent,
     ForgotPasswordComponent,
+    PageErrorComponent,
   ],
   imports: [
     BrowserAnimationsModule,
