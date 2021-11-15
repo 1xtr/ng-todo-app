@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {UserService} from "../../_services/user.service";
+import {SnackBarService} from "../../_services/snack-bar.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-auth-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
   showPasswordToggle = true
 
@@ -14,8 +17,6 @@ export class LoginComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
   })
-
-
 
   getErrorMessage() {
     if (this.loginForm.controls['email'].hasError('required')) {
@@ -25,12 +26,35 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls['email'].hasError('email') ? 'Not a valid email' : '';
   }
 
-  constructor() { }
+  constructor(
+    private appUserService: UserService,
+    private appSnackbarService: SnackBarService,
+    private router: Router,
+  ) { }
 
-  ngOnInit(): void {
-  }
 
-  submit() {
-    console.log(this.loginForm)
+
+  loginFormSubmit() {
+    if (this.loginForm.invalid) {
+      return this.appSnackbarService.warning('Form invalid!')
+    }
+    const {email, password} = this.loginForm.value
+    this.appUserService.login(email, password)
+      .subscribe({
+        next: (response) => {
+          this.appUserService.userData = response
+          this.appUserService.isAuthenticated = true
+          this.appSnackbarService.success(`Login success!`)
+        },
+        error: () => {
+            this.appSnackbarService.error('Email or password incorrect!')
+        },
+        complete: () => {
+          this.loginForm.reset()
+          this.router.navigate(['/'], {queryParams: {isAuthenticated: true}}).then()
+        }
+      })
+
+
   }
 }
