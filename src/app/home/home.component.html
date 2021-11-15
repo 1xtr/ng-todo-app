@@ -1,5 +1,6 @@
-<app-create-todo-list></app-create-todo-list>
+<app-about *ngIf="!auth.isAuthenticated(); else todoActions"></app-about>
 
-<app-todo-list></app-todo-list>
-
-<pre>{{user | json}}</pre>
+<ng-template #todoActions>
+  <app-create-todo-list></app-create-todo-list>
+  <app-todo-list></app-todo-list>
+</ng-template>

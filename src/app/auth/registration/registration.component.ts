@@ -1,16 +1,17 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CustomValidator} from '../../shared/custom.validator'
 import {Router} from "@angular/router";
-import {UserService} from "../../_services/user.service";
 import {SnackBarService} from "../../_services/snack-bar.service";
+import {Subscription} from "rxjs";
+import {AuthService} from "../../_services/auth.service";
 
 @Component({
   selector: 'app-auth-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent {
+export class RegistrationComponent implements OnDestroy {
   showPasswordToggle = true
   regForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -24,11 +25,11 @@ export class RegistrationComponent {
       CustomValidator.passwordMatch('password', 'confirmPassword')
     ])
   })
-
+  regSub: Subscription | undefined
 
   constructor(
+    private auth: AuthService,
     private appSnackbarService: SnackBarService,
-    private appUserService: UserService,
     private router: Router) {
   }
 
@@ -45,7 +46,7 @@ export class RegistrationComponent {
       return this.appSnackbarService.warning('Registration failed, form invalid!')
     }
     const {email, password} = this.regForm.value
-    this.appUserService.register(email, password)
+    this.auth.register(email, password)
       .subscribe({
           next: () => {
             this.appSnackbarService.success('Registration success!')
@@ -61,6 +62,12 @@ export class RegistrationComponent {
           }
         }
       )
+  }
+
+  ngOnDestroy(): void {
+    if (this.regSub) {
+        this.regSub.unsubscribe()
+    }
   }
 
 }

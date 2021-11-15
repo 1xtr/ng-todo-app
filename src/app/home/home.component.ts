@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {ILoginResponseData, UserService} from '../_services/user.service';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from "../_services/auth.service";
 
 @Component({
   selector: 'app-home',
@@ -7,11 +7,11 @@ import {ILoginResponseData, UserService} from '../_services/user.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  user: ILoginResponseData | {} | undefined
-  constructor(private appUserService: UserService) { }
+  // user = this.appUserService.userData
+
+  constructor(public auth: AuthService) {}
 
   ngOnInit(): void {
-    this.user = this.appUserService.userData
   }
 
 }

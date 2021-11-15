@@ -1,12 +1,14 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon>menu</mat-icon>
-  </button>
   <a routerLink="/" class="xtr-navbar-logo"><span>B!t works</span></a>
-  <small>isAuthenticated: {{isAuthenticated}}</small>
   <span class="example-spacer"></span>
-  <a mat-button routerLink="/auth" *ngIf="!isAuthenticated; else logoutBtn">Login</a>
-  <ng-template #logoutBtn>
-    <button mat-button (click)="logoutButtonHandler()">Logout</button>
+  <a mat-button routerLink="/auth" *ngIf="!auth.isAuthenticated(); else topMenu">Login</a>
+  <ng-template #topMenu>
+    <button mat-icon-button class="example-icon" aria-label="menu icon" [matMenuTriggerFor]="beforeMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #beforeMenu="matMenu" xPosition="before">
+      <button mat-menu-item routerLink="/profile">Profile</button>
+      <button mat-menu-item (click)="logoutButtonHandler()">Logout</button>
+    </mat-menu>
   </ng-template>
 </mat-toolbar>
