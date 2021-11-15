@@ -1,60 +1,54 @@
 import {Injectable, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {SnackBarService} from "./snack-bar.service";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../environments/environment";
+import {Observable} from "rxjs";
 
-export interface IUserData {
-  localId?: string
-  idToken?: string
-  email?: string
-  refreshToken?: string
-  expiresIn?: string
+export interface IRegistrationResponseData {
+  email: string,
+  expiresIn: string
+  idToken: string,
+  kind: string,
+  localId: string,
+  refreshToken: string,
 }
 
-export interface RegistrationResponse {
-  body?: {
-    email?: string
-    expiresIn?: string
-    idToken?: string;
-    kind?: string;
-    localId?: string
-    refreshToken?: string
-  }
-  // error?: {
-  //   code?: number
-  //   message?: string
-  //   errors?: [{
-  //     message: string
-  //     domain: string
-  //     reason: string
-  //   }]
-  // }
+export interface ILoginResponseData {
+  displayName: string
+  email: string
+  expiresIn: string
+  idToken: string
+  kind: string
+  localId: string
+  refreshToken: string
+  registered: string
+
+}
+
+export interface IForgotPasswordResponseData {
+  kind: string,
+  allProviders: string[],
+  registered: boolean,
+  sessionId: string,
+  signinMethods: string[]
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService implements OnInit {
-  userData: IUserData | {} = {
-    email: '',
-    expiresIn: '',
-    idToken: '',
-    localId: '',
-    refreshToken: '',
-  }
+  userData: ILoginResponseData | {} = {}
   isAuthenticated: boolean = false
 
   constructor(
     private http: HttpClient,
-    private appSnackbarService: SnackBarService,
   ) {
   }
 
   ngOnInit(): void {
   }
 
-  register(email: string, password: string) {
-    return this.http.post(
+  register(email: string, password: string): Observable<IRegistrationResponseData | HttpErrorResponse> {
+    return this.http.post<IRegistrationResponseData>(
       environment.REG_URL,
       {email, password, returnSecureToken: false},
       {
@@ -64,13 +58,23 @@ export class UserService implements OnInit {
   }
 
 
-  // login() {
-  // }
-  //
-  // logout() {
-  // }
-  getUserByEmail(email: string) {
-    return this.http.post(
+  login(email: string, password: string): Observable<ILoginResponseData | HttpErrorResponse> {
+    return this.http.post<ILoginResponseData>(
+      environment.LOGIN_URL,
+      {email, password, returnSecureToken: true},
+      {
+        headers: {'Content-Type': 'application/json'}
+      }
+    )
+  }
+
+  logout() {
+    this.isAuthenticated = false
+    this.userData = {}
+  }
+
+  getUserByEmail(email: string): Observable<IForgotPasswordResponseData> {
+    return this.http.post<IForgotPasswordResponseData>(
       environment.FORGOT_PASSWORD_URL,
       {identifier: email, continueUri: 'http://localhost:4200/auth/forgot-password'},
       {headers: {'Content-Type': 'application/json'}}
