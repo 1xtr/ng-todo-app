@@ -21,8 +21,8 @@ export class ForgotPasswordComponent implements OnDestroy{
   }
 
   submit() {
-    const {email} = this.forgotForm.value;
-    this.fSub = this.auth.sendForgotPassword(email).subscribe(() => {
+    this.fSub = this.auth.sendForgotPassword(this.forgotForm.value.email)
+      .subscribe(() => {
       // we always send a request even if the mail does not exist ащк security reason
       this.appSnackbarService.info('Request was send to your email')
     })
