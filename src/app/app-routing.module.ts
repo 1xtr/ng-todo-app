@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {HomeComponent} from "./home/home.component";
 import {AboutComponent} from "./about/about.component";
 import {AuthComponent} from "./auth/auth.component";
@@ -13,13 +13,15 @@ import {AuthGuard} from "./shared/auth.guard";
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'about', component: AboutComponent},
-  {path: 'profile', component: ProfileComponent},
-  {path: 'auth', component: AuthComponent, children: [
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
+  {
+    path: 'auth', component: AuthComponent, children: [
       {path: '', redirectTo: '/auth/login', pathMatch: 'full'},
       {path: 'login', component: LoginComponent},
       {path: 'registration', component: RegistrationComponent},
       {path: 'forgot-password', component: ForgotPasswordComponent},
-    ]},
+    ]
+  },
   {path: '**', component: PageErrorComponent},
 
 ];
@@ -28,4 +30,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
