@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
   })
-  loginSub: Subscription | undefined
+  allSubs: Subscription | undefined
   getErrorMessages: ILoginErrorArray = {
     forbidden: 'Access denied, need authorization',
   }
@@ -41,18 +41,19 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.fragment.subscribe((hash: keyof ILoginErrorArray | null) => {
+    const routeSub = this.route.fragment.subscribe((hash: keyof ILoginErrorArray | null) => {
       if (hash) {
         this.appSnackbarService.warning(this.getErrorMessages[hash])
       }
     })
+    this.allSubs?.add(routeSub)
   }
 
   loginFormSubmit() {
     if (this.loginForm.invalid) {
       return this.appSnackbarService.warning('Form invalid!')
     }
-    this.loginSub = this.auth.login(this.loginForm.value)
+    const loginSub = this.auth.login(this.loginForm.value)
       .subscribe({
         next: (response) => {
           this.appUserService.userData = {...response}
@@ -66,11 +67,12 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.router.navigate(['/']).then()
         }
       })
+    this.allSubs?.add(loginSub)
   }
 
   ngOnDestroy(): void {
-    if (this.loginSub) {
-      this.loginSub.unsubscribe()
+    if (this.allSubs) {
+      this.allSubs.unsubscribe()
     }
   }
 

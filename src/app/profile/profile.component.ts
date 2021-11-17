@@ -11,8 +11,6 @@ import {SnackBarService} from "../_services/snack-bar.service";
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   userData: IFBUserData | undefined
-  gSub: Subscription | undefined
-  uSub: Subscription | undefined
   allSubs: Subscription | undefined
   tokenExpiresDate: Date | undefined
   userNewName: string | undefined
@@ -27,12 +25,12 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inputNameFieldDisabled = true
     this.tokenExpiresDate = new Date(localStorage.getItem('xtr-fb-token-expDate') as string)
-    this.gSub = this.userService.getUserInfo()
+    const gSub = this.userService.getUserInfo()
       .subscribe(({users}) => {
         this.userData = users[0]
         this.userNewName = this.userData?.displayName
       })
-    this.allSubs?.add(this.gSub)
+    this.allSubs?.add(gSub)
   }
 
   inputHandler(event: Event) {
@@ -42,7 +40,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   updateUserName() {
     console.log('update')
     this.inputNameFieldDisabled = true
-    this.uSub = this.userService.changeUserInfo(this.userNewName)
+    const uSub = this.userService.changeUserInfo(this.userNewName)
       .subscribe({
         next: (response) => {
           this.alert.success('Update info success!')
@@ -52,6 +50,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.alert.error('Update info failed!')
         }
       })
+    this.allSubs?.add(uSub)
   }
 
   ngOnDestroy(): void {
