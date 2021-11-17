@@ -42,9 +42,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.inputNameFieldDisabled = true
     const uSub = this.userService.changeUserInfo(this.userNewName)
       .subscribe({
-        next: (response) => {
-          this.alert.success('Update info success!')
-        },
+        next: () => this.alert.success('Update info success!'),
         error: (err) => {
           console.log('Update info failed:', err)
           this.alert.error('Update info failed!')
