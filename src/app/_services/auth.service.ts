@@ -13,7 +13,7 @@ import {
   providedIn: 'root'
 })
 export class AuthService {
-  tokenData = { // for localStorage
+  tokenData = {
     id: 'xtr-fb-token',
     expire: 'xtr-fb-token-expDate',
     refresh: 'xtr-fb-token-refresh',
@@ -81,10 +81,12 @@ export class AuthService {
 
   private setToken(response: ILoginResponseData | IRefreshTokenResponseData | null) {
     if (response) {
+      localStorage.clear()
+      console.log('Set token: ', response)
       const expDate = new Date(new Date().getTime() + 3600000).toString()
       localStorage.setItem(
         this.tokenData.id,
-        (<ILoginResponseData>response).idToken || (<IRefreshTokenResponseData>response).access_token)
+        (<ILoginResponseData>response).idToken || (<IRefreshTokenResponseData>response).id_token)
       localStorage.setItem(
         this.tokenData.refresh,
         (<ILoginResponseData>response).refreshToken || (<IRefreshTokenResponseData>response).refresh_token)
@@ -94,7 +96,7 @@ export class AuthService {
     }
   }
 
-  refreshTokenRequest(): Observable<IRefreshTokenResponseData> {
+  private refreshToken(): Observable<IRefreshTokenResponseData> {
     const refreshToken = localStorage.getItem(this.tokenData.refresh) as string
     const body = new HttpParams()
       .set('grant_type', 'refresh_token')
@@ -110,10 +112,16 @@ export class AuthService {
     )
   }
 
-  autoLogin() {
-    if (this.isAuthenticated()) {
-      this.refreshTokenRequest().pipe(
-        tap(this.setToken)
+  refreshSession() {
+    if (!this.isAuthenticated()) {
+      this.refreshToken().subscribe({
+          next: (response) => {
+            this.setToken(response)
+          },
+          error: (err) => {
+            console.log('Refresh token error', err)
+          }
+        }
       )
     }
   }
@@ -121,7 +129,7 @@ export class AuthService {
   sendForgotPassword(email: string) {
     return this.http.post(
       environment.FORGOT_PASSWORD_URL,
-      {'requestType':'PASSWORD_RESET','email': email}
+      {'requestType': 'PASSWORD_RESET', 'email': email}
     )
   }
 
