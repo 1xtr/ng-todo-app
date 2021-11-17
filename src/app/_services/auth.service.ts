@@ -17,6 +17,7 @@ export class AuthService {
     id: 'xtr-fb-token',
     expire: 'xtr-fb-token-expDate',
     refresh: 'xtr-fb-token-refresh',
+    userId: 'xtr-fb-user-id',
   }
 
   public error$: Subject<string> = new Subject<string>()
@@ -84,6 +85,9 @@ export class AuthService {
       localStorage.clear()
       console.log('Set token: ', response)
       const expDate = new Date(new Date().getTime() + 3600000).toString()
+      localStorage.setItem(
+        this.tokenData.userId,
+        (<ILoginResponseData>response).localId || (<IRefreshTokenResponseData>response).user_id)
       localStorage.setItem(
         this.tokenData.id,
         (<ILoginResponseData>response).idToken || (<IRefreshTokenResponseData>response).id_token)
