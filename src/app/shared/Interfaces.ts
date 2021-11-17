@@ -79,14 +79,21 @@ export interface ILoginErrorArray {
   [forbidden: string]: string
 }
 
-export interface TodoList {
+export interface ITodoList {
   id: string
   title: string
   owner_id: string
-  create_date: string
-  last_modify?: { user_id: string, date: string }
-  share?: {
-    url: string,
-    access_type: string
-  }[]
+  create_date: Date
+  last_modify: { user_id: string, date: Date }
+  provided?: string[]
+  share: {
+    url: string | ''
+    readonly: boolean,
+    writeable: boolean,
+
+  }
+}
+
+export interface ICreateListResponse {
+  name?: string
 }
