@@ -1,7 +1,23 @@
-<div class="xtr-create-container">
+<div class="xtr-create-container" [formGroup]="createTListForm">
   <mat-form-field class="example-form-field" appearance="fill">
-    <mat-label>Enter some name for new todo list</mat-label>
-    <input matInput type="text" [(ngModel)]="value">
+    <mat-label>Todo list name</mat-label>
+    <input
+      matInput
+      type="text"
+      placeholder="Enter some todo list name"
+      formControlName="listName"
+    >
+    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['required']">Имя не может быть пустым</mat-error>
+    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['minlength']">Минимальная длина 3 символа</mat-error>
+    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['maxlength']">Максимальная длина 50 символов</mat-error>
   </mat-form-field>
-  <button mat-flat-button color="primary" class="create-button">Create</button>
+  <button
+    mat-flat-button
+    color="primary"
+    class="create-button"
+    [disabled]="createTListForm.invalid"
+    (click)="createTListHandler()"
+  >Create
+  </button>
 </div>
+<!--<pre>{{createTListForm.controls | json}}</pre>-->
