@@ -1,1 +1,27 @@
-<p>profile works!</p>
+<h2>Your profile data</h2>
+<mat-list role="list">
+  <mat-list-item role="listitem">ID: {{userData?.localId}}</mat-list-item>
+  <mat-list-item role="listitem">
+    Name:
+    <input
+      matInput
+      disabled
+      [disabled]="inputNameFieldDisabled"
+      (input)="inputHandler($event)"
+      [defaultValue]="userNewName"
+    >
+    <button (click)="inputNameFieldDisabled = false" *ngIf="inputNameFieldDisabled">Change</button>
+    <button
+      (click)="updateUserName()"
+      *ngIf="!inputNameFieldDisabled"
+      [disabled]="userData?.displayName === userNewName"
+    >Update
+    </button>
+  </mat-list-item>
+  <mat-list-item role="listitem">E-mail: {{userData?.email}}</mat-list-item>
+  <mat-list-item role="listitem">Registration date: {{userData?.createdAt | date:'dd.MM.YYYY HH:mm:ss'}}</mat-list-item>
+  <mat-list-item role="listitem">Last password change
+    date: {{userData?.passwordUpdatedAt | date:'dd.MM.YYYY HH:mm:ss'}}</mat-list-item>
+  <mat-list-item role="listitem">Last login date: {{userData?.lastLoginAt | date:'dd.MM.YYYY HH:mm:ss'}}</mat-list-item>
+  <mat-list-item role="listitem">Token expire date: {{tokenExpiresDate | date:'dd.MM.YYYY HH:mm:ss'}}</mat-list-item>
+</mat-list>

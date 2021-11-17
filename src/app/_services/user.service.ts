@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {IUserData} from "../shared/Interfaces";
+import {IGetUserDataResponse, IUserData} from "../shared/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +15,11 @@ export class UserService implements OnInit {
   }
   userData: IUserData | undefined = {}
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   getUserByEmail(email: string): Observable<any> {
     return this.http.post<any>(
@@ -27,19 +29,20 @@ export class UserService implements OnInit {
     )
   }
 
-  getUserInfo() {
-    this.http.post(
+  getUserInfo(): Observable<IGetUserDataResponse> {
+    return this.http.post<IGetUserDataResponse>(
       environment.GET_USER_DATA_URL,
       {idToken: localStorage.getItem(this.tokenData.id)})
-      .subscribe(response => {
-        console.log('Get user data', response)
-      })
   }
 
-
-
-
-
-
-
+  changeUserInfo(newName: string = '', photoUrl: string = '') {
+    return this.http.post<IGetUserDataResponse>(
+      environment.UPDATE_USER_DATA_URL,
+      {
+        idToken: localStorage.getItem(this.tokenData.id),
+        displayName: newName,
+        photoUrl,
+        returnSecureToken: true,
+      })
+  }
 }

@@ -1,15 +1,62 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {UserService} from "../_services/user.service";
+import {IFBUserData} from "../shared/Interfaces";
+import {Subscription} from "rxjs";
+import {SnackBarService} from "../_services/snack-bar.service";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
+  userData: IFBUserData | undefined
+  gSub: Subscription | undefined
+  uSub: Subscription | undefined
+  allSubs: Subscription | undefined
+  tokenExpiresDate: Date | undefined
+  userNewName: string | undefined
+  inputNameFieldDisabled: boolean | undefined
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor(
+    private userService: UserService,
+    private alert: SnackBarService,
+  ) {
   }
 
+  ngOnInit(): void {
+    this.inputNameFieldDisabled = true
+    this.tokenExpiresDate = new Date(localStorage.getItem('xtr-fb-token-expDate') as string)
+    this.gSub = this.userService.getUserInfo()
+      .subscribe(({users}) => {
+        this.userData = users[0]
+        this.userNewName = this.userData?.displayName
+      })
+    this.allSubs?.add(this.gSub)
+  }
+
+  inputHandler(event: Event) {
+    this.userNewName = (<HTMLInputElement>event.target).value
+  }
+
+  updateUserName() {
+    console.log('update')
+    this.inputNameFieldDisabled = true
+    this.uSub = this.userService.changeUserInfo(this.userNewName)
+      .subscribe({
+        next: (response) => {
+          this.alert.success('Update info success!')
+        },
+        error: (err) => {
+          console.log('Update info failed:', err)
+          this.alert.error('Update info failed!')
+        }
+      })
+  }
+
+  ngOnDestroy(): void {
+    if (this.allSubs) {
+      this.allSubs.unsubscribe()
+    }
+  }
 }
