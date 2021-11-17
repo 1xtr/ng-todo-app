@@ -7,11 +7,15 @@ import {AuthService} from "./_services/auth.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  title = 'B!T works';
+  title = 'Angular first app!';
   constructor(private auth: AuthService) {
   }
 
   ngOnInit(): void {
-    this.auth.autoLogin()
+    this.auth.refreshSession()
+    setTimeout(() => {
+      console.log('Auto refresh')
+      this.auth.refreshSession()
+    }, 3540000)
   }
 }

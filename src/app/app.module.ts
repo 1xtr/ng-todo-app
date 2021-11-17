@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -14,7 +14,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatButtonModule} from "@angular/material/button";
-import {HttpClientModule} from "@angular/common/http";
+import {HttpClientModule, HTTP_INTERCEPTORS} from "@angular/common/http";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
@@ -27,12 +27,28 @@ import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.
 import { PageErrorComponent } from './page-error/page-error.component';
 import {MatMenuModule} from "@angular/material/menu";
 import { ProfileComponent } from './profile/profile.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatListModule} from "@angular/material/list";
+import {MatCardModule} from "@angular/material/card";
+import {MatTableModule} from "@angular/material/table";
+import {AuthInterceptor} from "./shared/auth.interceptor";
 
 const matSnackbarDefaultConfig: MatSnackBarConfig = {
   verticalPosition: 'bottom',
   horizontalPosition: 'start',
   duration: 4000,
 };
+
+const SNACKBAR_PROVIDER: Provider = {
+  provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+  useValue: matSnackbarDefaultConfig}
+
+const INTERCEPTOR_PROVIDER: Provider = {
+  provide: HTTP_INTERCEPTORS,
+  useClass: AuthInterceptor,
+  multi: true,
+}
 
 @NgModule({
   declarations: [
@@ -66,10 +82,16 @@ const matSnackbarDefaultConfig: MatSnackBarConfig = {
     MatTabsModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatMenuModule
+    MatMenuModule,
+    MatExpansionModule,
+    MatDatepickerModule,
+    MatListModule,
+    MatCardModule,
+    MatTableModule
   ],
   providers: [
-    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: matSnackbarDefaultConfig}
+    SNACKBAR_PROVIDER,
+    INTERCEPTOR_PROVIDER
   ],
   bootstrap: [AppComponent]
 })
