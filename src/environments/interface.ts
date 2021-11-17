@@ -7,6 +7,7 @@ export interface Environment {
   CHECK_EMAIL_EXIST_URL: string
   REFRESH_TOKEN_URL: string
   GET_USER_DATA_URL: string
+  UPDATE_USER_DATA_URL: string
   firebaseConfig: {
     apiKey: string
     authDomain: string

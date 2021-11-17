@@ -13,6 +13,7 @@ export const environment: Environment = {
   CHECK_EMAIL_EXIST_URL: 'https://identitytoolkit.googleapis.com/v1/accounts:createAuthUri?key=AIzaSyDC-HkFhPqCnfbb56wxkgAnfPPkhPAHn-Y',
   REFRESH_TOKEN_URL: 'https://securetoken.googleapis.com/v1/token?key=AIzaSyDC-HkFhPqCnfbb56wxkgAnfPPkhPAHn-Y',
   GET_USER_DATA_URL: 'https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDC-HkFhPqCnfbb56wxkgAnfPPkhPAHn-Y',
+  UPDATE_USER_DATA_URL: 'https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDC-HkFhPqCnfbb56wxkgAnfPPkhPAHn-Y',
   firebaseConfig: {
     apiKey: "AIzaSyDC-HkFhPqCnfbb56wxkgAnfPPkhPAHn-Y",
     authDomain: "test-project-67b13.firebaseapp.com",
