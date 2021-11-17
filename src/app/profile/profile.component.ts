@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {UserService} from "../_services/user.service";
 import {IFBUserData} from "../shared/Interfaces";
 import {Subscription} from "rxjs";
@@ -14,7 +14,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   allSubs: Subscription | undefined
   tokenExpiresDate: Date | undefined
   userNewName: string | undefined
-  inputNameFieldDisabled: boolean | undefined
+  inputNameFieldDisabled: boolean | undefined = true
 
   constructor(
     private userService: UserService,
@@ -23,8 +23,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.inputNameFieldDisabled = true
     this.tokenExpiresDate = new Date(localStorage.getItem('xtr-fb-token-expDate') as string)
+    this.fetchUserData()
+  }
+
+  fetchUserData() {
     const gSub = this.userService.getUserInfo()
       .subscribe(({users}) => {
         this.userData = users[0]
@@ -46,6 +49,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
         error: (err) => {
           console.log('Update info failed:', err)
           this.alert.error('Update info failed!')
+        },
+        complete: () => {
+          this.fetchUserData()
         }
       })
     this.allSubs?.add(uSub)

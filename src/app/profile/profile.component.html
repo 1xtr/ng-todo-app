@@ -4,11 +4,10 @@
   <mat-list-item role="listitem">
     Name:
     <input
+      type='text'
       matInput
-      disabled
-      [disabled]="inputNameFieldDisabled"
-      (input)="inputHandler($event)"
-      [defaultValue]="userNewName"
+      disabled="{{inputNameFieldDisabled}}"
+      [(ngModel)]="userNewName"
     >
     <button (click)="inputNameFieldDisabled = false" *ngIf="inputNameFieldDisabled">Change</button>
     <button
