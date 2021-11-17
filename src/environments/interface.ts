@@ -8,6 +8,7 @@ export interface Environment {
   REFRESH_TOKEN_URL: string
   GET_USER_DATA_URL: string
   UPDATE_USER_DATA_URL: string
+  FB_DB_URL: string
   firebaseConfig: {
     apiKey: string
     authDomain: string
