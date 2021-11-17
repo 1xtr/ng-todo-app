@@ -44,6 +44,32 @@ export interface IRefreshTokenResponseData {
   project_id: string
 }
 
+export interface IGetUserDataResponse {
+  kind: string,
+  users: IFBUserData[]
+}
+
+export interface IFBUserData {
+  localId: string,
+  displayName?: string,
+  email: string,
+  passwordHash: string,
+  emailVerified: false,
+  passwordUpdatedAt: number,
+  providerUserInfo: [
+    {
+      providerId: string,
+      federatedId: string,
+      email: string,
+      rawId: string
+    }
+  ],
+  validSince: string,
+  lastLoginAt: string,
+  createdAt: string,
+  lastRefreshAt: string
+}
+
 export interface UserLoginForm {
   email: string
   password: string
@@ -51,4 +77,16 @@ export interface UserLoginForm {
 
 export interface ILoginErrorArray {
   [forbidden: string]: string
+}
+
+export interface TodoList {
+  id: string
+  title: string
+  owner_id: string
+  create_date: string
+  last_modify?: { user_id: string, date: string }
+  share?: {
+    url: string,
+    access_type: string
+  }[]
 }
