@@ -80,20 +80,32 @@ export interface ILoginErrorArray {
 }
 
 export interface ITodoList {
-  id: string
+  id?: string
   title: string
   owner_id: string
   create_date: Date
   last_modify: { user_id: string, date: Date }
   provided?: string[]
-  share: {
+  share?: {
     url: string | ''
     readonly: boolean,
     writeable: boolean,
+  },
+  tasks?: {
+    [key: string]: ITask
+  }[]
+}
 
-  }
+export interface ITask {
+  id?: string
+  title?: string
+  isDone?: boolean
 }
 
 export interface ICreateListResponse {
   name?: string
+}
+
+export interface FBObjData<Type> {
+  [key: string]: Type
 }
