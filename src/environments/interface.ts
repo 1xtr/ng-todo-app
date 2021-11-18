@@ -1,5 +1,6 @@
 export interface Environment {
   production: boolean
+  APP_URL: string
   API_KEY: string
   REG_URL: string
   LOGIN_URL: string
