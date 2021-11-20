@@ -91,9 +91,11 @@ export interface ITodoList {
     readonly: boolean,
     writeable: boolean,
   },
-  tasks?: {
-    [key: string]: ITask
-  }[]
+  tasks: FBObjData<ITask>
+}
+
+export interface IRawTodoList {
+  tasks: FBObjData<ITask>
 }
 
 export interface ITask {
@@ -103,7 +105,7 @@ export interface ITask {
 }
 
 export interface ICreateListResponse {
-  name?: string
+  name: string
 }
 
 export interface FBObjData<Type> {
