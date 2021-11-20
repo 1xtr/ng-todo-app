@@ -1,53 +1,75 @@
-<div class="example-action-buttons">
-  <button mat-button (click)="accordion?.closeAll()">Collapse All</button>
+<div *ngIf="isTodoListEmpty; else loading">
+  <div class="example-action-buttons">
+    <button mat-button (click)="accordion?.closeAll()">Collapse All</button>
+  </div>
+  <mat-accordion class="example-headers-align" multi>
+
+    <mat-expansion-panel *ngFor="let todo of tLists | keyvalue">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{todo.value.title}}
+        </mat-panel-title>
+        <mat-panel-description >
+          {{ todo.value.tasks ? (todo.value.tasks | taskStateCounter) : 'Total tasks: 0 | Opened: 0 | Done: 0' }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <form [formGroup]="createTaskForm">
+          <mat-form-field class="example-full-width" appearance="fill">
+            <mat-label>New task</mat-label>
+            <input matInput placeholder="Not forget ..." formControlName="taskName">
+          </mat-form-field>
+          <button mat-icon-button aria-label="Create new task" color="primary" (click)="createTaskHandler(todo.key)">
+            <mat-icon>add_circle</mat-icon>
+          </button>
+        </form>
+        <!--  Tasks table start  -->
+        <table mat-table
+               *ngIf="todo.value.tasks"
+               [dataSource]="todo.value.tasks | keyvalue"
+               class="mat-elevation-z8 xtr-table-tList">
+
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef>No.</th>
+            <td mat-cell *matCellDef="let i = index"> {{i + 1}} </td>
+          </ng-container>
+          <ng-container matColumnDef="task">
+            <th mat-header-cell *matHeaderCellDef>Task</th>
+            <td mat-cell *matCellDef="let task" [class.xtr-done-task]="task.value.isDone">{{task.value.title}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let task">
+              <button mat-icon-button aria-label="finish task" color="primary" [disabled]="task.value.isDone"
+                      (click)="closeTaskHandler(todo.key, task.key)">
+                <mat-icon>task_alt</mat-icon>
+              </button>
+              <button mat-icon-button aria-label="delete task" color="warn"
+                      (click)="deleteTaskHandler(todo.key, task.key)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <!--  Tasks table end  -->
+      </ng-template>
+      <mat-action-row>
+        <a mat-button disabled>{{todo.value.share?.url}}</a>
+        <button mat-button color="primary" (click)="shareListHandler(todo.key)">Share</button>
+        <button mat-button color="warn" (click)="deleteListHandler(todo.key)">Delete</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
 </div>
-<mat-accordion class="example-headers-align" multi>
-  <mat-expansion-panel>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        #1 Todo list title
-      </mat-panel-title>
-      <mat-panel-description>
-        Total tasks: 10 | Opened: 3 | Done: 7
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <ng-template matExpansionPanelContent>
-      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" class="xtr-table-tList">
+<ng-template #loading>
 
-        <ng-container matColumnDef="position">
-          <th mat-header-cell *matHeaderCellDef>No.</th>
-          <td mat-cell *matCellDef="let i = index"> {{i + 1 }} </td>
-        </ng-container>
-        <ng-container matColumnDef="task">
-          <th mat-header-cell *matHeaderCellDef>Task</th>
-          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-        </ng-container>
-
-        <!-- Weight Column -->
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let element">
-            <button mat-icon-button aria-label="finish task" color="primary">
-              <mat-icon >task_alt</mat-icon>
-            </button>
-            <button mat-icon-button aria-label="delete task" color="warn">
-              <mat-icon >delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </ng-template>
-    <mat-action-row>
-      <a mat-button>https://localhost:4200/tl/asr9isd</a>
-      <button mat-button color="primary">Share</button>
-      <button mat-button color="warn">Delete</button>
-    </mat-action-row>
-
-
-  </mat-expansion-panel>
-
-
-</mat-accordion>
+  <div class="xtr-loader">
+    <mat-spinner></mat-spinner>
+    <br>
+    Loading...
+  </div>
+</ng-template>
