@@ -26,3 +26,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-simple-snackbar-action {
   color: #FFFFFF;
 }
+
+.xtr-loader {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  flex-direction: column;
+}
