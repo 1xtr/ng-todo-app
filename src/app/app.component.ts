@@ -13,9 +13,5 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     this.auth.refreshSession()
-    setTimeout(() => {
-      console.log('Auto refresh')
-      this.auth.refreshSession()
-    }, 3540000)
   }
 }
