@@ -83,7 +83,7 @@ export class AuthService {
   private setToken(response: ILoginResponseData | IRefreshTokenResponseData | null) {
     if (response) {
       localStorage.clear()
-      console.log('Set token: ', response)
+      // console.log('Set token: ', response)
       const expDate = new Date(new Date().getTime() + 3600000).toString()
       localStorage.setItem(
         this.tokenData.userId,
