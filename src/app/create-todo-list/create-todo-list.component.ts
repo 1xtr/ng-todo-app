@@ -3,7 +3,8 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Observable, Subscription} from 'rxjs';
 import {SnackBarService} from '../_services/snack-bar.service';
 import {TodoListService} from "../_services/todo-list.service";
-import {ICreateListResponse} from "../shared/Interfaces";
+import {ICreateListResponse, ITodoList} from "../shared/Interfaces";
+import { StoreService } from '../_services/store.service';
 
 @Component({
   selector: 'app-create-todo-list',
@@ -18,7 +19,9 @@ export class CreateTodoListComponent implements OnInit, OnDestroy {
 
   constructor(
     private listService: TodoListService,
-    private alert: SnackBarService) {
+    private alert: SnackBarService,
+    private store: StoreService,
+    ) {
   }
 
   ngOnInit(): void {
@@ -28,15 +31,23 @@ export class CreateTodoListComponent implements OnInit, OnDestroy {
     if (this.createTListForm.invalid) {
       return
     }
-    const crSub = (<Observable<ICreateListResponse>>this.listService.create(this.createTListForm.value.listName))
+    const userId = localStorage.getItem('xtr-fb-user-id') as string
+    const currTime: Date = new Date()
+    const list: ITodoList = {
+      create_date: currTime,
+      owner_id: userId,
+      title: this.createTListForm.value.listName,
+      last_modify: {
+        user_id: userId,
+        date: currTime,
+      },
+      tasks: {}
+    }
+    const crSub = (<Observable<ICreateListResponse>>this.listService.createTodoList(list))
       .subscribe({
         next: (response) => {
           if (response.name) {
-            const pSub = this.listService.patchListId(response.name)
-              .subscribe((response) => {
-                console.log('Patch id response', response)
-              })
-            this.allSubs?.add(pSub)
+            this.store.newTodoList$.next({ [response.name]: list})
             this.alert.success('Todo list successfully created!')
             this.createTListForm.reset()
           }
