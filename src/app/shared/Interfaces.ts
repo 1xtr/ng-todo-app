@@ -49,6 +49,26 @@ export interface IGetUserDataResponse {
   users: IFBUserData[]
 }
 
+export interface IUpdateProfileResponse {
+  kind: string,
+  localId: string,
+  email: string,
+  displayName: string,
+  providerUserInfo: [
+    {
+      providerId: string,
+      displayName: string,
+      photoUrl: string,
+      federatedId: string,
+      email: string,
+      rawId: string
+    }
+  ],
+  photoUrl: string,
+  passwordHash: string,
+  emailVerified: boolean
+}
+
 export interface IFBUserData {
   localId: string,
   displayName?: string,
@@ -86,16 +106,13 @@ export interface ITodoList {
   create_date: Date
   last_modify: { user_id: string, date: Date }
   provided?: string[]
-  share?: {
+  share: {
+    isShared: boolean
+    fragment: string
     url: string | ''
-    readonly: boolean,
     writeable: boolean,
   },
-  tasks: FBObjData<ITask>
-}
-
-export interface IRawTodoList {
-  tasks: FBObjData<ITask>
+  tasks: Record<string, ITask>
 }
 
 export interface ITask {
@@ -104,7 +121,7 @@ export interface ITask {
   isDone?: boolean
 }
 
-export interface ICreateListResponse {
+export interface IFBPostResponse {
   name: string
 }
 
