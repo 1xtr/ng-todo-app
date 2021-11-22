@@ -2,7 +2,7 @@ import {Injectable, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
 import {Observable} from "rxjs";
-import {IGetUserDataResponse, IUserData} from "../shared/Interfaces";
+import {IGetUserDataResponse, IUpdateProfileResponse, IUserData} from "../shared/Interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +36,7 @@ export class UserService implements OnInit {
   }
 
   changeUserInfo(newName: string = '', photoUrl: string = '') {
-    return this.http.post<IGetUserDataResponse>(
+    return this.http.post<IUpdateProfileResponse>(
       environment.UPDATE_USER_DATA_URL,
       {
         idToken: localStorage.getItem(this.tokenData.id),
