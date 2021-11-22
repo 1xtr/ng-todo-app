@@ -35,7 +35,11 @@ import {MatTableModule} from "@angular/material/table";
 import {AuthInterceptor} from "./shared/auth.interceptor";
 import {ObjToArrPipe} from './shared/obj-to-arr.pipe';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { TaskDoneCounterPipe } from './shared/pipes/task-done-counter.pipe';
+import {TaskDoneCounterPipe} from './shared/pipes/task-done-counter.pipe';
+import {LoaderComponent} from "./shared/loader.component";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {ObjIsEmptyPipe} from './shared/pipes/obj-is-empty.pipe';
+import {ClipboardModule} from "@angular/cdk/clipboard";
 
 const matSnackbarDefaultConfig: MatSnackBarConfig = {
   verticalPosition: 'bottom',
@@ -71,31 +75,35 @@ const INTERCEPTOR_PROVIDER: Provider = {
     ProfileComponent,
     ObjToArrPipe,
     TaskDoneCounterPipe,
+    LoaderComponent,
+    ObjIsEmptyPipe,
   ],
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDividerModule,
-        MatTabsModule,
-        MatTooltipModule,
-        MatSnackBarModule,
-        MatMenuModule,
-        MatExpansionModule,
-        MatDatepickerModule,
-        MatListModule,
-        MatCardModule,
-        MatTableModule,
-        MatProgressSpinnerModule
-    ],
+  imports: [
+    BrowserAnimationsModule,
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDividerModule,
+    MatTabsModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatMenuModule,
+    MatExpansionModule,
+    MatDatepickerModule,
+    MatListModule,
+    MatCardModule,
+    MatTableModule,
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    ClipboardModule
+  ],
   providers: [
     SNACKBAR_PROVIDER,
     INTERCEPTOR_PROVIDER
