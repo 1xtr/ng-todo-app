@@ -1,5 +1,5 @@
 <h2>Your profile data</h2>
-<mat-list role="list">
+<mat-list role="list" *ngIf="!isLoading; else loading">
   <mat-list-item role="listitem">ID: {{userData?.localId}}</mat-list-item>
   <mat-list-item role="listitem">
     Name:
@@ -24,3 +24,6 @@
   <mat-list-item role="listitem">Last login date: {{userData?.lastLoginAt | date:'dd.MM.YYYY HH:mm:ss'}}</mat-list-item>
   <mat-list-item role="listitem">Token expire date: {{tokenExpiresDate | date:'dd.MM.YYYY HH:mm:ss'}}</mat-list-item>
 </mat-list>
+<ng-template #loading>
+  <xtr-loader></xtr-loader>
+</ng-template>
