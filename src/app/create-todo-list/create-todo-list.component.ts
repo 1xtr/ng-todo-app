@@ -3,8 +3,9 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Observable, Subscription} from 'rxjs';
 import {SnackBarService} from '../_services/snack-bar.service';
 import {TodoListService} from "../_services/todo-list.service";
-import {ICreateListResponse, ITodoList} from "../shared/Interfaces";
-import { StoreService } from '../_services/store.service';
+import {IFBPostResponse, ITodoList} from "../shared/Interfaces";
+import {StoreService} from '../_services/store.service';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-create-todo-list',
@@ -21,7 +22,7 @@ export class CreateTodoListComponent implements OnInit, OnDestroy {
     private listService: TodoListService,
     private alert: SnackBarService,
     private store: StoreService,
-    ) {
+  ) {
   }
 
   ngOnInit(): void {
@@ -33,6 +34,7 @@ export class CreateTodoListComponent implements OnInit, OnDestroy {
     }
     const userId = localStorage.getItem('xtr-fb-user-id') as string
     const currTime: Date = new Date()
+    const fragment = Math.random().toString(36).substr(3)
     const list: ITodoList = {
       create_date: currTime,
       owner_id: userId,
@@ -41,13 +43,19 @@ export class CreateTodoListComponent implements OnInit, OnDestroy {
         user_id: userId,
         date: currTime,
       },
-      tasks: {}
+      tasks: {},
+      share: {
+        fragment,
+        isShared: false,
+        url: `${environment.APP_URL}/#${fragment}`,
+        writeable: false,
+      }
     }
-    const crSub = (<Observable<ICreateListResponse>>this.listService.createTodoList(list))
+    const crSub = (<Observable<IFBPostResponse>>this.listService.createTodoList(list))
       .subscribe({
         next: (response) => {
           if (response.name) {
-            this.store.newTodoList$.next({ [response.name]: list})
+            this.store.newTodoList$.next({[response.name]: list})
             this.alert.success('Todo list successfully created!')
             this.createTListForm.reset()
           }
