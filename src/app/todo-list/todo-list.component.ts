@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatAccordion} from "@angular/material/expansion";
-import {FBObjData, ITask, ITodoList} from "../shared/Interfaces";
+import {ITask, ITodoList} from "../shared/Interfaces";
 import {TodoListService} from "../_services/todo-list.service";
 import {Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -16,13 +16,14 @@ import {StoreService} from "../_services/store.service";
 export class TodoListComponent implements OnInit, OnDestroy {
   @ViewChild(MatAccordion) accordion: MatAccordion | undefined
   allSubs: Subscription | undefined
-  tLists: FBObjData<ITodoList>
+  tLists: Record<string, ITodoList>
   tasks: ITask[] | undefined
   createTaskForm: FormGroup = new FormGroup({
     taskName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
   })
   displayedColumns: string[] = ['position', 'task', 'actions'];
-  isTodoListEmpty: boolean = true;
+  isLoading: boolean = true;
+  shareActionsToggle: boolean = false;
 
   constructor(
     public listService: TodoListService,
@@ -35,6 +36,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.listService.getAllLists()
     const tlSub = this.store.todoLists$.subscribe(tLists => {
+      this.store.isLoading$.next(false)
       if (this.tLists !== tLists) {
         this.tLists = tLists
       }
@@ -42,8 +44,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
     const newTLSub = this.store.newTodoList$.subscribe(value => {
       this.tLists = {...this.tLists, ...value}
     })
-
+    const loSub = this.store.isLoading$.subscribe(state => this.isLoading = state)
     this.allSubs?.add(tlSub)
+    this.allSubs?.add(loSub)
     this.allSubs?.add(newTLSub)
   }
 
@@ -57,17 +60,24 @@ export class TodoListComponent implements OnInit, OnDestroy {
     })
   }
 
-  shareListHandler(listId: string = '') {
-    // TODO: share list method
-    console.log('Share list ' + listId)
+  shareListToggleHandler(isShared: boolean, listId: string = '', writable: boolean = false, fragment: string) {
+    this.listService.shareTodoToggle(isShared, listId, writable, fragment)
+    if (isShared) {
+      this.alert.success('Todo share cancelled')
+      this.tLists[listId].share['isShared'] = !isShared
+    } else {
+      this.alert.success('Todo share successfully')
+      this.tLists[listId].share['isShared'] = !isShared
+    }
+    this.shareActionsToggle = !this.shareActionsToggle
   }
 
   closeTaskHandler(listId: string = '', taskId: string = '') {
     this.listService.finishTask(listId, taskId).subscribe({
       next: () => {
         const newTaskState = this.tLists[listId].tasks
-        newTaskState[taskId] = {...newTaskState[taskId], isDone: true }
-        this.tLists[listId].tasks = { ...newTaskState}
+        newTaskState[taskId] = {...newTaskState[taskId], isDone: true}
+        this.tLists[listId].tasks = {...newTaskState}
       }
     })
   }
@@ -77,7 +87,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
       next: () => {
         const newTaskState = this.tLists[listId].tasks
         delete newTaskState[taskId]
-        this.tLists[listId].tasks = { ...newTaskState}
+        this.tLists[listId].tasks = {...newTaskState}
         this.alert.success('Task deleted successfully')
       },
       error: () => this.alert.error('Task deleted failed')
@@ -92,8 +102,8 @@ export class TodoListComponent implements OnInit, OnDestroy {
       }
       this.listService.createTask(listId as string, task)
         .subscribe(response => {
-          const newTask = { [response.name]: task}
-          this.tLists[listId].tasks = { ...this.tLists[listId].tasks, ...newTask}
+          const newTask = {[response.name]: task}
+          this.tLists[listId].tasks = {...this.tLists[listId].tasks, ...newTask}
           this.alert.success('Task added')
           this.createTaskForm.reset()
         })
@@ -104,5 +114,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
     if (this.allSubs) {
       this.allSubs.unsubscribe()
     }
+  }
+
+  changeShareAccessTypeHandler(todoId: string, writeable: boolean, fragment: string) {
+    console.log(todoId, writeable, fragment)
   }
 }

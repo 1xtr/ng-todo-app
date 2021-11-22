@@ -1,4 +1,4 @@
-<div *ngIf="isTodoListEmpty; else loading">
+<div *ngIf="!isLoading; else loading">
   <div class="example-action-buttons">
     <button mat-button (click)="accordion?.closeAll()">Collapse All</button>
   </div>
@@ -9,7 +9,7 @@
         <mat-panel-title>
           {{todo.value.title}}
         </mat-panel-title>
-        <mat-panel-description >
+        <mat-panel-description>
           {{ todo.value.tasks ? (todo.value.tasks | taskStateCounter) : 'Total tasks: 0 | Opened: 0 | Done: 0' }}
         </mat-panel-description>
       </mat-expansion-panel-header>
@@ -25,7 +25,7 @@
         </form>
         <!--  Tasks table start  -->
         <table mat-table
-               *ngIf="todo.value.tasks"
+               *ngIf="todo.value.tasks | objIsEmpty"
                [dataSource]="todo.value.tasks | keyvalue"
                class="mat-elevation-z8 xtr-table-tList">
 
@@ -57,19 +57,67 @@
         </table>
         <!--  Tasks table end  -->
       </ng-template>
-      <mat-action-row>
-        <a mat-button disabled>{{todo.value.share?.url}}</a>
-        <button mat-button color="primary" (click)="shareListHandler(todo.key)">Share</button>
-        <button mat-button color="warn" (click)="deleteListHandler(todo.key)">Delete</button>
+      <mat-action-row class="xtr-todo-actions">
+        <div #shareActions *ngIf="shareActionsToggle" class="xtr-share-actions">
+          <!--          Start R/RW toggle-->
+          <span class="xtr-todo-share-toggle">Read</span>
+          <mat-slide-toggle #shareToggle
+                            [checked]="(todo.value.share['writeable'])"
+          >Read/Write
+          </mat-slide-toggle>
+          <!--          End R/RW toggle-->
+          <button mat-button
+                  color="primary"
+                  (click)="shareListToggleHandler(
+                    todo.value.share.isShared,
+                    todo.key,
+                    shareToggle.checked,
+                    (todo.value.share.fragment))"
+                  *ngIf="!todo.value.share['isShared']"
+          >Create link
+          </button>
+          <button mat-button
+                  color="primary"
+                  *ngIf="todo.value.share['isShared']"
+                  [disabled]="todo.value.share['writeable'] == shareToggle.checked"
+                  (click)="changeShareAccessTypeHandler(todo.key, shareToggle.checked, (todo.value.share.fragment))"
+          >Apply changes
+          </button>
+          <button mat-button
+                  color="warn"
+                  *ngIf="todo.value.share['isShared']"
+                  (click)="shareListToggleHandler(
+                    todo.value.share.isShared,
+                    todo.key,
+                    shareToggle.checked,
+                    (todo.value.share.fragment))"
+          >Cancel share
+          </button>
+          <button mat-button
+                  (click)="shareActionsToggle = !shareActionsToggle"
+          >Back
+          </button>
+        </div>
+        <div *ngIf="!shareActionsToggle">
+          <button mat-icon-button
+                  matTooltip="Copy link to clipboard"
+                  matTooltipPosition="above"
+                  *ngIf="todo.value.share['isShared']"
+                  [cdkCopyToClipboard]="(todo.value.share.url)"
+          >
+            <mat-icon>content_copy</mat-icon>
+          </button>
+          <span class="xtr-share-link" *ngIf="todo.value.share['isShared']">{{todo.value.share?.url}}</span>
+          <button mat-button color="primary" (click)="shareActionsToggle = !shareActionsToggle"
+                  *ngIf="!shareActionsToggle">Share
+          </button>
+          <button mat-button color="warn" (click)="deleteListHandler(todo.key)" *ngIf="!shareActionsToggle">Delete
+          </button>
+        </div>
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
 </div>
 <ng-template #loading>
-
-  <div class="xtr-loader">
-    <mat-spinner></mat-spinner>
-    <br>
-    Loading...
-  </div>
+  <xtr-loader></xtr-loader>
 </ng-template>

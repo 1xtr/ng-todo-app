@@ -29,3 +29,23 @@
 .xtr-done-task {
   text-decoration: line-through;
 }
+
+.xtr-todo-actions {
+  align-items: center;
+}
+
+.xtr-todo-share-toggle {
+  margin-right: 0.5rem;
+}
+
+.xtr-share-link {
+  color: rgba(0, 0, 0, .26);
+  font-size: 14px;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.xtr-share-actions {
+  display: flex;
+  align-items: center;
+}
