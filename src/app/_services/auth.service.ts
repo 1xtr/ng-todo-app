@@ -3,6 +3,7 @@ import {HttpClient, HttpErrorResponse, HttpParams} from "@angular/common/http";
 import {catchError, Observable, Subject, tap, throwError} from "rxjs";
 import {environment} from "../../environments/environment";
 import {
+  IForgotPasswordResponseData,
   ILoginResponseData,
   IRefreshTokenResponseData,
   IRegistrationResponseData,
@@ -130,8 +131,8 @@ export class AuthService {
     }
   }
 
-  sendForgotPassword(email: string) {
-    return this.http.post(
+  sendForgotPassword(email: string): Observable<IForgotPasswordResponseData> {
+    return this.http.post<IForgotPasswordResponseData>(
       environment.FORGOT_PASSWORD_URL,
       {'requestType': 'PASSWORD_RESET', 'email': email}
     )
