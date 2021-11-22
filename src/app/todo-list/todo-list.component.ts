@@ -24,6 +24,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['position', 'task', 'actions'];
   isLoading: boolean = true;
   shareActionsToggle: boolean = false;
+  activeTListIdx: string = ''
 
   constructor(
     public listService: TodoListService,
@@ -69,29 +70,7 @@ export class TodoListComponent implements OnInit, OnDestroy {
       this.alert.success('Todo share successfully')
       this.tLists[listId].share['isShared'] = !isShared
     }
-    this.shareActionsToggle = !this.shareActionsToggle
-  }
-
-  closeTaskHandler(listId: string = '', taskId: string = '') {
-    this.listService.finishTask(listId, taskId).subscribe({
-      next: () => {
-        const newTaskState = this.tLists[listId].tasks
-        newTaskState[taskId] = {...newTaskState[taskId], isDone: true}
-        this.tLists[listId].tasks = {...newTaskState}
-      }
-    })
-  }
-
-  deleteTaskHandler(listId: string = '', taskId: string = '') {
-    this.listService.deleteTask(listId, taskId).subscribe({
-      next: () => {
-        const newTaskState = this.tLists[listId].tasks
-        delete newTaskState[taskId]
-        this.tLists[listId].tasks = {...newTaskState}
-        this.alert.success('Task deleted successfully')
-      },
-      error: () => this.alert.error('Task deleted failed')
-    })
+    this.activeTodoToggle(listId)
   }
 
   createTaskHandler(listId: string = '') {
@@ -110,13 +89,49 @@ export class TodoListComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
-    if (this.allSubs) {
-      this.allSubs.unsubscribe()
-    }
+  deleteTaskHandler(listId: string = '', taskId: string = '') {
+    this.listService.deleteTask(listId, taskId).subscribe({
+      next: () => {
+        const newTaskState = this.tLists[listId].tasks
+        delete newTaskState[taskId]
+        this.tLists[listId].tasks = {...newTaskState}
+        this.alert.success('Task deleted successfully')
+      },
+      error: () => this.alert.error('Task deleted failed')
+    })
+  }
+
+  closeTaskHandler(listId: string = '', taskId: string = '') {
+    this.listService.finishTask(listId, taskId).subscribe({
+      next: () => {
+        const newTaskState = this.tLists[listId].tasks
+        newTaskState[taskId] = {...newTaskState[taskId], isDone: true}
+        this.tLists[listId].tasks = {...newTaskState}
+      }
+    })
   }
 
   changeShareAccessTypeHandler(todoId: string, writeable: boolean, fragment: string) {
     console.log(todoId, writeable, fragment)
+    if (
+      this.listService.patch(`/todo-list/${todoId}/share`, {writeable})
+      && this.listService.patch(`/shared-todo/${fragment}`, {writeable})
+    ) {
+      this.tLists[todoId].share['writeable'] = writeable
+      this.alert.success(`Shared access now is ${writeable ? 'read and write' : 'read only'}`)
+      this.activeTodoToggle(todoId)
+    }
+
+
+  }
+
+  activeTodoToggle(id: string) {
+    this.tLists[id].isActive = !this.tLists[id].isActive
+  }
+
+  ngOnDestroy(): void {
+    if (this.allSubs) {
+      this.allSubs.unsubscribe()
+    }
   }
 }

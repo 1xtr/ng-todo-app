@@ -49,7 +49,8 @@ export class CreateTodoListComponent implements OnInit, OnDestroy {
         isShared: false,
         url: `${environment.APP_URL}/#${fragment}`,
         writeable: false,
-      }
+      },
+      isActive: false
     }
     const crSub = (<Observable<IFBPostResponse>>this.listService.createTodoList(list))
       .subscribe({

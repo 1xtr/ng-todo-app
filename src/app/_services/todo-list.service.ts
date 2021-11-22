@@ -43,7 +43,10 @@ export class TodoListService {
       .pipe(
         first()
       )
-      .subscribe()
+      .subscribe({
+        next: () => true,
+        error: () => false
+      })
   }
 
   delete(url: string) {

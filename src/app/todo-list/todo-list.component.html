@@ -2,9 +2,10 @@
   <div class="example-action-buttons">
     <button mat-button (click)="accordion?.closeAll()">Collapse All</button>
   </div>
+  <p>Active todo index: {{ activeTListIdx}}</p>
   <mat-accordion class="example-headers-align" multi>
 
-    <mat-expansion-panel *ngFor="let todo of tLists | keyvalue">
+    <mat-expansion-panel *ngFor="let todo of tLists | keyvalue; let todoIdx = index">
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{todo.value.title}}
@@ -58,7 +59,7 @@
         <!--  Tasks table end  -->
       </ng-template>
       <mat-action-row class="xtr-todo-actions">
-        <div #shareActions *ngIf="shareActionsToggle" class="xtr-share-actions">
+        <div *ngIf="todo.value.isActive" class="xtr-share-actions">
           <!--          Start R/RW toggle-->
           <span class="xtr-todo-share-toggle">Read</span>
           <mat-slide-toggle #shareToggle
@@ -94,11 +95,11 @@
           >Cancel share
           </button>
           <button mat-button
-                  (click)="shareActionsToggle = !shareActionsToggle"
+                  (click)="activeTodoToggle(todo.key)"
           >Back
           </button>
         </div>
-        <div *ngIf="!shareActionsToggle">
+        <div *ngIf="!todo.value.isActive">
           <button mat-icon-button
                   matTooltip="Copy link to clipboard"
                   matTooltipPosition="above"
@@ -108,10 +109,10 @@
             <mat-icon>content_copy</mat-icon>
           </button>
           <span class="xtr-share-link" *ngIf="todo.value.share['isShared']">{{todo.value.share?.url}}</span>
-          <button mat-button color="primary" (click)="shareActionsToggle = !shareActionsToggle"
-                  *ngIf="!shareActionsToggle">Share
+          <button mat-button color="primary" (click)="activeTodoToggle(todo.key)"
+                  *ngIf="!todo.value.isActive">Share
           </button>
-          <button mat-button color="warn" (click)="deleteListHandler(todo.key)" *ngIf="!shareActionsToggle">Delete
+          <button mat-button color="warn" (click)="deleteListHandler(todo.key)" *ngIf="!todo.value.isActive">Delete
           </button>
         </div>
       </mat-action-row>

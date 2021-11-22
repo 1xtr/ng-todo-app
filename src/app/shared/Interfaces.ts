@@ -112,7 +112,8 @@ export interface ITodoList {
     url: string | ''
     writeable: boolean,
   },
-  tasks: Record<string, ITask>
+  tasks: Record<string, ITask>,
+  isActive: boolean,
 }
 
 export interface ITask {
