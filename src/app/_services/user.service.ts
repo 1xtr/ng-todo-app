@@ -21,13 +21,13 @@ export class UserService implements OnInit {
   ngOnInit(): void {
   }
 
-  getUserByEmail(email: string): Observable<any> {
-    return this.http.post<any>(
-      environment.FORGOT_PASSWORD_URL,
-      {identifier: email, continueUri: 'http://localhost:4200/auth/forgot-password'},
-      {headers: {'Content-Type': 'application/json'}}
-    )
-  }
+  // getUserByEmail(email: string): Observable<any> {
+  //   return this.http.post<any>(
+  //     environment.FORGOT_PASSWORD_URL,
+  //     {identifier: email, continueUri: 'http://localhost:4200/auth/forgot-password'},
+  //     {headers: {'Content-Type': 'application/json'}}
+  //   )
+  // }
 
   getUserInfo(): Observable<IGetUserDataResponse> {
     return this.http.post<IGetUserDataResponse>(
