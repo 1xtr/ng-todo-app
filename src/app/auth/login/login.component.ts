@@ -13,6 +13,7 @@ import {ILoginErrorArray} from "../../shared/Interfaces";
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy {
+  referrer: string = ''
   showPasswordToggle = true
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   allSubs: Subscription | undefined
   getErrorMessages: ILoginErrorArray = {
     forbidden: 'Access denied, need authorization',
+    shared: 'Для доступа необходимо авторизоваться',
   }
 
   getErrorMessage() {
@@ -36,15 +38,18 @@ export class LoginComponent implements OnInit, OnDestroy {
     private appUserService: UserService,
     private appSnackbarService: SnackBarService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
   ) {
   }
 
   ngOnInit(): void {
-    const routeSub = this.route.fragment.subscribe((hash: keyof ILoginErrorArray | null) => {
-      if (hash) {
+    const routeSub = this.route.fragment.subscribe((hash: string | null) => {
+      if (hash === 'forbidden') {
         this.appSnackbarService.warning(this.getErrorMessages[hash])
+      } else {
+        this.referrer = hash as string
       }
+
     })
     this.allSubs?.add(routeSub)
   }
@@ -64,7 +69,11 @@ export class LoginComponent implements OnInit, OnDestroy {
         },
         complete: () => {
           this.loginForm.reset()
-          this.router.navigate(['/']).then()
+          if (this.referrer) {
+            this.router.navigate([`/t/${this.referrer}`]).then()
+          } else {
+            this.router.navigate(['/']).then()
+          }
         }
       })
     this.allSubs?.add(loginSub)
