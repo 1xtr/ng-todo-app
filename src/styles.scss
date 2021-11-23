@@ -19,10 +19,20 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .success-xtr-snack-bar {
   background-color: #2E7D32;
 }
+
 .warning-xtr-snack-bar {
   background-color: #ED6C02;
 }
 
 .mat-simple-snackbar-action {
   color: #FFFFFF;
+}
+
+.xtr-table-tList {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.xtr-done-task {
+  text-decoration: line-through;
 }
