@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {FBObjData, IFBPostResponse, ITask, ITodoList} from "../shared/Interfaces";
+import {FBObjData, IFBPostResponse, ISharedTodo, ITask, ITodoList} from "../shared/Interfaces";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../environments/environment";
-import {delay, first, Observable} from "rxjs";
+import {first, Observable} from "rxjs";
 import {AuthService} from "./auth.service";
 import {StoreService} from './store.service';
 
@@ -17,21 +17,15 @@ export class TodoListService {
   ) {
   }
 
-  getAllLists(): void {
+  getAllLists(): Observable<Record<string, ITodoList>> {
     this.store.isLoading$.next(true)
-    this.http.get<FBObjData<ITodoList>>(`${environment.FB_DB_URL}/todo-list.json`)
+    return this.http.get<FBObjData<ITodoList>>(`${environment.FB_DB_URL}/todo-list.json`)
       .pipe(
-        delay(1000),
         first()
-      ).subscribe(value => {
-      this.store.todoLists$.next(value)
-    })
+      )
   }
 
-  createTodoList(tList: ITodoList): Observable<IFBPostResponse> | undefined {
-    if (!this.auth.isAuthenticated()) {
-      return
-    }
+  createTodoList(tList: ITodoList): Observable<IFBPostResponse> {
     return this.http.post<IFBPostResponse>(`${environment.FB_DB_URL}/todo-list.json`, tList)
       .pipe(
         first()
@@ -67,7 +61,6 @@ export class TodoListService {
     }
   }
 
-
   deleteTodoList(listId: string | undefined) {
     return this.http.delete<any>(`${environment.FB_DB_URL}/todo-list/${listId}.json`)
       .pipe(
@@ -98,5 +91,19 @@ export class TodoListService {
       )
   }
 
+  getTodoById(todoId: string): Observable<ITodoList> {
+    return this.http.get<ITodoList>(`${environment.FB_DB_URL}/todo-list/${todoId}.json`)
+      .pipe(
+        // delay(1000),
+        first()
+      )
+  }
+
+  getSharedTodoByFragment(fragment: string): Observable<ISharedTodo> {
+    return this.http.get<ISharedTodo>(`${environment.FB_DB_URL}/shared-todo/${fragment}.json`)
+      .pipe(
+        first()
+      )
+  }
 
 }
