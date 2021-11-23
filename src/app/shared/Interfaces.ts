@@ -114,6 +114,7 @@ export interface ITodoList {
   },
   tasks: Record<string, ITask>,
   isActive: boolean,
+  tempTaskName?: string,
 }
 
 export interface ITask {
@@ -128,4 +129,9 @@ export interface IFBPostResponse {
 
 export interface FBObjData<Type> {
   [key: string]: Type
+}
+
+export interface ISharedTodo {
+  todoId: string
+  writeable: boolean
 }
