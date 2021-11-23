@@ -28,12 +28,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     const gSub = this.userService.getUserInfo()
       .subscribe(({users}) => {
         this.userData = users[0]
-        console.log('profile init', this.userData)
         this.userNewName = this.userData?.displayName
         this.isLoading = false
       })
     this.allSubs?.add(gSub)
-    console.log('loading', this.isLoading)
 
   }
 
