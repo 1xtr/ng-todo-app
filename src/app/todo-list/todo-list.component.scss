@@ -21,14 +21,6 @@
    //pointer-events: none;
 }
 
-.xtr-table-tList {
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.xtr-done-task {
-  text-decoration: line-through;
-}
 
 .xtr-todo-actions {
   align-items: center;
@@ -48,4 +40,27 @@
 .xtr-share-actions {
   display: flex;
   align-items: center;
+}
+
+.example-form-field {
+  flex-grow: 1;
+}
+
+.xtr-create-list-form {
+  display: flex;
+}
+
+
+.mat-form-field-suffix {
+  display: flex;
+  align-self: flex-start;
+}
+
+.xtr-create-container {
+  display: flex;
+}
+
+.create-button {
+  height: 80%;
+  margin: 1rem;
 }

@@ -6,6 +6,7 @@ import {Subscription} from "rxjs";
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {SnackBarService} from '../_services/snack-bar.service';
 import {StoreService} from "../_services/store.service";
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-todo-list',
@@ -16,49 +17,99 @@ import {StoreService} from "../_services/store.service";
 export class TodoListComponent implements OnInit, OnDestroy {
   @ViewChild(MatAccordion) accordion: MatAccordion | undefined
   allSubs: Subscription | undefined
-  tLists: Record<string, ITodoList>
-  tasks: ITask[] | undefined
-  createTaskForm: FormGroup = new FormGroup({
-    taskName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
+  createTListForm: FormGroup = new FormGroup({
+    listName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
   })
+  tLists!: Record<string, ITodoList>
+  tasks: ITask[] | undefined
+  createTaskForm: FormGroup = new FormGroup({})
   displayedColumns: string[] = ['position', 'task', 'actions'];
   isLoading: boolean = true;
   shareActionsToggle: boolean = false;
-  activeTListIdx: string = ''
 
   constructor(
     public listService: TodoListService,
     private alert: SnackBarService,
     private store: StoreService,
   ) {
-    this.tLists = {}
   }
 
   ngOnInit(): void {
-    this.listService.getAllLists()
-    const tlSub = this.store.todoLists$.subscribe(tLists => {
-      this.store.isLoading$.next(false)
-      if (this.tLists !== tLists) {
-        this.tLists = tLists
+    this.listService.getAllLists().subscribe({
+      next: (tLists) => {
+        if (this.tLists !== tLists) {
+          this.tLists = tLists
+        }
+      },
+      complete: () => {
+        this.store.isLoading$.next(false)
+        if (this.tLists) {
+          Object.keys(this.tLists).map((key) => this.addTaskNameField(key))
+        }
       }
     })
-    const newTLSub = this.store.newTodoList$.subscribe(value => {
-      this.tLists = {...this.tLists, ...value}
-    })
+
     const loSub = this.store.isLoading$.subscribe(state => this.isLoading = state)
-    this.allSubs?.add(tlSub)
     this.allSubs?.add(loSub)
-    this.allSubs?.add(newTLSub)
   }
 
-  deleteListHandler(listId: string) {
+  createTListHandler() {
+    if (this.createTListForm.invalid) {
+      return
+    }
+    const userId = localStorage.getItem('xtr-fb-user-id') as string
+    const currTime: Date = new Date()
+    const fragment = Math.random().toString(36).substr(3)
+    const list: ITodoList = {
+      create_date: currTime,
+      owner_id: userId,
+      title: this.createTListForm.value.listName,
+      last_modify: {
+        user_id: userId,
+        date: currTime,
+      },
+      tasks: {},
+      share: {
+        fragment,
+        isShared: false,
+        url: `${environment.APP_URL}/t/${fragment}`,
+        writeable: false,
+      },
+      isActive: false
+    }
+    this.listService.createTodoList(list).subscribe({
+      next: (response) => {
+        if (response.name) {
+          this.addTaskNameField(response.name)
+          this.tLists = {...this.tLists, [response.name]: list}
+          this.alert.success('Todo list successfully created!')
+          this.createTListForm.reset()
+        }
+      },
+      error: (err) => {
+        console.log('Create list error: ', err)
+        this.alert.error('Create list failed')
+      },
+    })
+  }
+
+  deleteListHandler(listId: string, fragment: string) {
+    if (this.tLists[listId].share.isShared) {
+      this.listService.delete(`/shared-todo/${fragment}`)
+    }
     this.listService.deleteTodoList(listId).subscribe({
       next: () => {
-        delete this.tLists[listId]
+        if (Object.keys(this.tLists).length === 1) {
+          this.tLists = {}
+        } else {
+          delete this.tLists[listId]
+        }
         this.alert.success('List deleted successfully')
       },
       error: () => this.alert.error('List deleting failed')
     })
+    this.createTListForm.removeControl(listId)
+    this.createTListForm.reset()
   }
 
   shareListToggleHandler(isShared: boolean, listId: string = '', writable: boolean = false, fragment: string) {
@@ -74,9 +125,9 @@ export class TodoListComponent implements OnInit, OnDestroy {
   }
 
   createTaskHandler(listId: string = '') {
-    if (!this.createTaskForm.invalid) {
+    if (!this.createTaskForm.get(listId)?.invalid) {
       const task: ITask = {
-        title: this.createTaskForm.value?.taskName,
+        title: this.createTaskForm.get(listId)?.value,
         isDone: false
       }
       this.listService.createTask(listId as string, task)
@@ -121,17 +172,25 @@ export class TodoListComponent implements OnInit, OnDestroy {
       this.alert.success(`Shared access now is ${writeable ? 'read and write' : 'read only'}`)
       this.activeTodoToggle(todoId)
     }
-
-
   }
 
   activeTodoToggle(id: string) {
     this.tLists[id].isActive = !this.tLists[id].isActive
   }
 
+  addTaskNameField(todoId: string): void {
+    this.createTaskForm.addControl(todoId, new FormControl(
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(50)],))
+  }
+
   ngOnDestroy(): void {
     if (this.allSubs) {
       this.allSubs.unsubscribe()
     }
+  }
+
+  forTestFn() {
+    console.log('task Name form', this.createTaskForm)
   }
 }

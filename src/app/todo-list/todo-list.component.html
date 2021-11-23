@@ -1,10 +1,20 @@
+<form class="xtr-create-container" [formGroup]="createTListForm" (submit)="createTListHandler()">
+  <mat-form-field class="example-form-field" appearance="fill">
+    <mat-label>New todo list</mat-label>
+    <input matInput type="text" placeholder="Enter some todo list name" formControlName="listName">
+    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['required']">Имя не может быть пустым</mat-error>
+    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['minlength']">Минимальная длина 3 символа</mat-error>
+    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['maxlength']">Максимальная длина 50 символов</mat-error>
+  </mat-form-field>
+  <button mat-flat-button color="primary" class="create-button" [disabled]="createTListForm.invalid" type="submit">
+    Create
+  </button>
+</form>
 <div *ngIf="!isLoading; else loading">
-  <div class="example-action-buttons">
+  <div class="example-action-buttons" *ngIf="tLists | objIsEmpty">
     <button mat-button (click)="accordion?.closeAll()">Collapse All</button>
   </div>
-  <p>Active todo index: {{ activeTListIdx}}</p>
   <mat-accordion class="example-headers-align" multi>
-
     <mat-expansion-panel *ngFor="let todo of tLists | keyvalue; let todoIdx = index">
       <mat-expansion-panel-header>
         <mat-panel-title>
@@ -18,7 +28,7 @@
         <form [formGroup]="createTaskForm">
           <mat-form-field class="example-full-width" appearance="fill">
             <mat-label>New task</mat-label>
-            <input matInput placeholder="Not forget ..." formControlName="taskName">
+            <input matInput placeholder="Not forget ..." [formControlName]="todo.key">
           </mat-form-field>
           <button mat-icon-button aria-label="Create new task" color="primary" (click)="createTaskHandler(todo.key)">
             <mat-icon>add_circle</mat-icon>
@@ -112,7 +122,8 @@
           <button mat-button color="primary" (click)="activeTodoToggle(todo.key)"
                   *ngIf="!todo.value.isActive">Share
           </button>
-          <button mat-button color="warn" (click)="deleteListHandler(todo.key)" *ngIf="!todo.value.isActive">Delete
+          <button mat-button color="warn" (click)="deleteListHandler(todo.key, (todo.value.share.fragment))"
+                  *ngIf="!todo.value.isActive">Delete
           </button>
         </div>
       </mat-action-row>
