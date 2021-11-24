@@ -43,7 +43,7 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
 const matSnackbarDefaultConfig: MatSnackBarConfig = {
   verticalPosition: 'bottom',
   horizontalPosition: 'start',
-  duration: 4000,
+  duration: 7000,
 };
 
 const SNACKBAR_PROVIDER: Provider = {
