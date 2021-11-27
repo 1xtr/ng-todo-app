@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
     }
     if (route.url[0].path === 't') {
       this.router.navigate(['/auth/login'], {
-        fragment: route.params['fragment'],
+        fragment: route.params['todoId'],
 
       }).then()
       return false

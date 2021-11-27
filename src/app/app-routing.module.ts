@@ -13,7 +13,7 @@ import {TodoComponent} from "./todo/todo.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
-  {path: 't/:fragment', component: TodoComponent, canActivate: [AuthGuard]},
+  {path: 't/:todoId', component: TodoComponent, canActivate: [AuthGuard]},
   {path: 't', redirectTo: '/', pathMatch: 'full'},
   {path: 'about', component: AboutComponent},
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},

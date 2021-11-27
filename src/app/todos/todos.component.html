@@ -1,21 +1,22 @@
-<form class="xtr-create-container" [formGroup]="createTListForm" (submit)="createTListHandler()">
+<button (click)="click()">asd</button>
+<form class="xtr-create-container" [formGroup]="createTodoForm" (submit)="createTListHandler()">
   <mat-form-field class="example-form-field" appearance="fill">
     <mat-label>New todo list</mat-label>
     <input matInput type="text" placeholder="Enter some todo list name" formControlName="listName">
-    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['required']">Имя не может быть пустым</mat-error>
-    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['minlength']">Минимальная длина 3 символа</mat-error>
-    <mat-error *ngIf="createTListForm.get('listName')?.errors?.['maxlength']">Максимальная длина 50 символов</mat-error>
+    <mat-error *ngIf="createTodoForm.get('listName')?.errors?.['required']">Имя не может быть пустым</mat-error>
+    <mat-error *ngIf="createTodoForm.get('listName')?.errors?.['minlength']">Минимальная длина 3 символа</mat-error>
+    <mat-error *ngIf="createTodoForm.get('listName')?.errors?.['maxlength']">Максимальная длина 50 символов</mat-error>
   </mat-form-field>
-  <button mat-flat-button color="primary" class="create-button" [disabled]="createTListForm.invalid" type="submit">
+  <button mat-flat-button color="primary" class="create-button" [disabled]="createTodoForm.invalid" type="submit">
     Create
   </button>
 </form>
 <div *ngIf="!isLoading; else loading">
-  <div class="example-action-buttons" *ngIf="tLists | objIsEmpty">
+  <div class="example-action-buttons" *ngIf="todos | objIsEmpty">
     <button mat-button (click)="accordion?.closeAll()">Collapse All</button>
   </div>
   <mat-accordion class="example-headers-align" multi>
-    <mat-expansion-panel *ngFor="let todo of tLists | keyvalue; let todoIdx = index">
+    <mat-expansion-panel *ngFor="let todo of todos | keyvalue">
       <mat-expansion-panel-header>
         <mat-panel-title>
           {{todo.value.title}}
@@ -72,36 +73,33 @@
         <div *ngIf="todo.value.isActive" class="xtr-share-actions">
           <!--          Start R/RW toggle-->
           <span class="xtr-todo-share-toggle">Read</span>
-          <mat-slide-toggle #shareToggle
-                            [checked]="(todo.value.share['writeable'])"
-          >Read/Write
+          <mat-slide-toggle #shareToggle [checked]="(todo.value.writeable)">
+            Read/Write
           </mat-slide-toggle>
           <!--          End R/RW toggle-->
           <button mat-button
                   color="primary"
                   (click)="shareListToggleHandler(
-                    todo.value.share.isShared,
+                    todo.value.isShared,
                     todo.key,
-                    shareToggle.checked,
-                    (todo.value.share.fragment))"
-                  *ngIf="!todo.value.share['isShared']"
+                    shareToggle.checked)"
+                  *ngIf="!todo.value.isShared"
           >Create link
           </button>
           <button mat-button
                   color="primary"
-                  *ngIf="todo.value.share['isShared']"
-                  [disabled]="todo.value.share['writeable'] == shareToggle.checked"
-                  (click)="changeShareAccessTypeHandler(todo.key, shareToggle.checked, (todo.value.share.fragment))"
+                  *ngIf="todo.value.isShared"
+                  [disabled]="todo.value.writeable == shareToggle.checked"
+                  (click)="changeShareAccessTypeHandler(todo.key, shareToggle.checked)"
           >Apply changes
           </button>
           <button mat-button
                   color="warn"
-                  *ngIf="todo.value.share['isShared']"
+                  *ngIf="todo.value.isShared"
                   (click)="shareListToggleHandler(
-                    todo.value.share.isShared,
+                    todo.value.isShared,
                     todo.key,
-                    shareToggle.checked,
-                    (todo.value.share.fragment))"
+                    shareToggle.checked)"
           >Cancel share
           </button>
           <button mat-button
@@ -113,16 +111,16 @@
           <button mat-icon-button
                   matTooltip="Copy link to clipboard"
                   matTooltipPosition="above"
-                  *ngIf="todo.value.share['isShared']"
-                  [cdkCopyToClipboard]="(todo.value.share.url)"
+                  *ngIf="todo.value.isShared"
+                  [cdkCopyToClipboard]="(todo.value.share_url+todo.key)"
           >
             <mat-icon>content_copy</mat-icon>
           </button>
-          <span class="xtr-share-link" *ngIf="todo.value.share['isShared']">{{todo.value.share?.url}}</span>
+          <span class="xtr-share-link" *ngIf="todo.value.isShared">{{todo.value.share_url + todo.key}}</span>
           <button mat-button color="primary" (click)="activeTodoToggle(todo.key)"
                   *ngIf="!todo.value.isActive">Share
           </button>
-          <button mat-button color="warn" (click)="deleteListHandler(todo.key, (todo.value.share.fragment))"
+          <button mat-button color="warn" (click)="deleteTodoHandler(todo.key, todo.value.isShared)"
                   *ngIf="!todo.value.isActive">Delete
           </button>
         </div>

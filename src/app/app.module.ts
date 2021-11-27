@@ -9,7 +9,7 @@ import {AuthComponent} from './auth/auth.component';
 import {LoginComponent} from './auth/login/login.component';
 import {RegistrationComponent} from './auth/registration/registration.component';
 import {TodoComponent} from './todo/todo.component';
-import {TodoListComponent} from './todo-list/todo-list.component';
+import {TodosComponent} from './todos/todos.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
@@ -32,18 +32,19 @@ import {MatListModule} from "@angular/material/list";
 import {MatCardModule} from "@angular/material/card";
 import {MatTableModule} from "@angular/material/table";
 import {AuthInterceptor} from "./shared/auth.interceptor";
-import {ObjToArrPipe} from './shared/obj-to-arr.pipe';
+import {ObjToArrPipe} from './shared/pipes/obj-to-arr.pipe';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {TaskDoneCounterPipe} from './shared/pipes/task-done-counter.pipe';
 import {LoaderComponent} from "./shared/loader.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ObjIsEmptyPipe} from './shared/pipes/obj-is-empty.pipe';
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import {DelColumnsPipe} from './shared/pipes/del-columns.pipe';
 
 const matSnackbarDefaultConfig: MatSnackBarConfig = {
-  verticalPosition: 'bottom',
-  horizontalPosition: 'start',
-  duration: 7000,
+  "verticalPosition": 'bottom',
+  "horizontalPosition": 'start',
+  "duration": 7000,
 };
 
 const SNACKBAR_PROVIDER: Provider = {
@@ -67,7 +68,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
     LoginComponent,
     RegistrationComponent,
     TodoComponent,
-    TodoListComponent,
+    TodosComponent,
     ForgotPasswordComponent,
     PageErrorComponent,
     ProfileComponent,
@@ -75,6 +76,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
     TaskDoneCounterPipe,
     LoaderComponent,
     ObjIsEmptyPipe,
+    DelColumnsPipe,
   ],
   imports: [
     BrowserAnimationsModule,

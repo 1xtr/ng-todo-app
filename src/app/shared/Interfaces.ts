@@ -99,21 +99,19 @@ export interface ILoginErrorArray {
   [forbidden: string]: string
 }
 
-export interface ITodoList {
+export interface ITodo {
   id?: string
   title: string
   owner_id: string
   create_date: Date
-  last_modify: { user_id: string, date: Date }
+  last_modify_date: Date
+  last_modify_user_id: string
   provided?: string[]
-  share: {
-    isShared: boolean
-    fragment: string
-    url: string | ''
-    writeable: boolean,
-  },
+  isShared: boolean
+  share_url: string
+  writeable: boolean,
   tasks: Record<string, ITask>,
-  isActive: boolean,
+  isActive?: boolean,
   tempTaskName?: string,
 }
 
@@ -132,6 +130,5 @@ export interface FBObjData<Type> {
 }
 
 export interface ISharedTodo {
-  todoId: string
-  writeable: boolean
+  user_id: string
 }

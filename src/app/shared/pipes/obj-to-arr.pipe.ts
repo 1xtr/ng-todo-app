@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {FBObjData, ITodoList} from "./Interfaces";
+import {FBObjData, ITodo} from "../Interfaces";
 
 @Pipe({
   name: 'FBObjToArr'
@@ -21,8 +21,8 @@ export class ObjToArrPipe implements PipeTransform {
       })
   }
 
-  transform(source: FBObjData<ITodoList>): ITodoList[] {
-    return this.objToArr<ITodoList>(source)
+  transform(source: FBObjData<ITodo>): ITodo[] {
+    return this.objToArr<ITodo>(source)
   }
 
 }
