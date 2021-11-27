@@ -19,5 +19,7 @@ export const environment: Environment = {
     storageBucket: "test-project-67b13.appspot.com",
     messagingSenderId: "344370951376",
     appId: "1:344370951376:web:6fb86c1deee5d761431ad5"
-  }
+  },
+  FB_TODOS_DB_URL: 'https://test-project-67b13-default-rtdb.europe-west1.firebasedatabase.app/angular-todo-app/todos/',
+  FB_SHARED_DB_URL: 'https://test-project-67b13-default-rtdb.europe-west1.firebasedatabase.app/angular-todo-app/shared/',
 };

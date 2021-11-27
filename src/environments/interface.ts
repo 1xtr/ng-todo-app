@@ -10,6 +10,8 @@ export interface Environment {
   GET_USER_DATA_URL: string
   UPDATE_USER_DATA_URL: string
   FB_DB_URL: string
+  FB_TODOS_DB_URL: string
+  FB_SHARED_DB_URL: string
   firebaseConfig: {
     apiKey: string
     authDomain: string
