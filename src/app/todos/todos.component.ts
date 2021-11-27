@@ -182,7 +182,4 @@ export class TodosComponent implements OnInit, OnDestroy {
     }
   }
 
-  click() {
-    console.log(this.todos);
-  }
 }
