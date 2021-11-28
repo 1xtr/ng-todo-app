@@ -1,8 +1,10 @@
-<button (click)="click()">get</button>
 <mat-card *ngIf="!isLoading; else loader">
   <mat-card-title>{{sharedTodo.title}}</mat-card-title>
   <mat-card-subtitle>{{ sharedTodo.tasks | taskStateCounter}}</mat-card-subtitle>
   <mat-card-content>
+    <app-add-task-form (submitAction)="createTaskHandler($event)"
+                       *ngIf="isWriteable"
+    ></app-add-task-form>
     <table mat-table
            *ngIf="sharedTodo.tasks | objIsEmpty"
            [dataSource]="sharedTodo.tasks | keyvalue"

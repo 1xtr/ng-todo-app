@@ -1,0 +1,9 @@
+<form [formGroup]="createTaskForm" (submit)="createTodo()">
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>New task</mat-label>
+    <input matInput placeholder="Not forget ..." [formControlName]="fieldName">
+  </mat-form-field>
+  <button mat-icon-button aria-label="Create new task" color="primary">
+    <mat-icon>add_circle</mat-icon>
+  </button>
+</form>

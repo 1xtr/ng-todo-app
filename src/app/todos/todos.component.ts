@@ -15,14 +15,17 @@ import {environment} from "../../environments/environment";
 })
 
 export class TodosComponent implements OnInit, OnDestroy {
+
   @ViewChild(MatAccordion) accordion: MatAccordion | undefined
   allSubs: Subscription | undefined
   createTodoForm: FormGroup = new FormGroup({
-    listName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
+    listName: new FormControl(
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(50)]),
   })
   todos!: Record<string, ITodo>
   tasks: ITask[] | undefined
-  createTaskForm: FormGroup = new FormGroup({})
+  // createTaskForm: FormGroup = new FormGroup({})
   displayedColumns: string[] = ['position', 'task', 'actions'];
   isLoading: boolean = true;
   shareActionsToggle: boolean = false;
@@ -44,9 +47,9 @@ export class TodosComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.store.isLoading$.next(false)
-        if (this.todos) {
-          Object.keys(this.todos).map((key) => this.addTaskNameField(key))
-        }
+        // if (this.todos) {
+        //   Object.keys(this.todos).map((key) => this.addTaskNameField(key))
+        // }
       }
     })
 
@@ -55,13 +58,13 @@ export class TodosComponent implements OnInit, OnDestroy {
 
   }
 
-  createTListHandler() {
+  createTodoHandler() {
     if (this.createTodoForm.invalid) {
       return
     }
     const userId = localStorage.getItem('xtr-fb-user-id') as string
     const currTime: Date = new Date()
-    const list: ITodo = {
+    const todo: ITodo = {
       create_date: currTime,
       owner_id: userId,
       title: this.createTodoForm.value.listName,
@@ -73,18 +76,18 @@ export class TodosComponent implements OnInit, OnDestroy {
       writeable: false,
     }
 
-    this.todosService.createTodo(list).subscribe({
+    this.todosService.createTodo(todo).subscribe({
       next: ({name: todoId}) => {
         if (todoId) {
-          this.addTaskNameField(todoId)
-          this.todos = {...this.todos, [todoId]: list}
-          this.alert.success('Todo list successfully created!')
+          // this.addTaskNameField(todoId)
+          this.todos = {...this.todos, [todoId]: todo}
+          this.alert.success('Todo todo successfully created!')
           this.createTodoForm.reset()
         }
       },
       error: (err) => {
-        console.log('Create list error: ', err)
-        this.alert.error('Create list failed')
+        console.log('Create todo error: ', err)
+        this.alert.error('Create todo failed')
       },
     })
   }
@@ -120,10 +123,10 @@ export class TodosComponent implements OnInit, OnDestroy {
     this.allSubs?.add(sSub)
   }
 
-  createTaskHandler(todoId: string = '') {
-    if (!this.createTaskForm.get(todoId)?.invalid) {
+  createTaskHandler(taskName: string, todoId: string) {
+    if (taskName) {
       const task: ITask = {
-        title: this.createTaskForm.get(todoId)?.value,
+        title: taskName,
         isDone: false
       }
       this.todosService.createTask(todoId as string, task)
@@ -131,7 +134,6 @@ export class TodosComponent implements OnInit, OnDestroy {
           const newTask = {[response.name]: task}
           this.todos[todoId].tasks = {...this.todos[todoId].tasks, ...newTask}
           this.alert.success('Task added')
-          this.createTaskForm.reset()
         })
     }
   }
@@ -168,12 +170,6 @@ export class TodosComponent implements OnInit, OnDestroy {
 
   activeTodoToggle(id: string) {
     this.todos[id].isActive = !this.todos[id].isActive
-  }
-
-  addTaskNameField(todoId: string): void {
-    this.createTaskForm.addControl(todoId, new FormControl(
-      '',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(50)],))
   }
 
   ngOnDestroy(): void {

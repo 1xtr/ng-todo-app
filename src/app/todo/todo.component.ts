@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {mergeMap, Observable, Subscription, switchMap} from "rxjs";
+import {Subscription, switchMap} from "rxjs";
 import {SnackBarService} from "../_services/snack-bar.service";
 import {TodosService} from "../_services/todos.service";
-import {ISharedTodo, ITodo} from "../shared/Interfaces";
+import {ISharedTodo, ITask, ITodo} from "../shared/Interfaces";
 import {AuthService} from "../_services/auth.service";
 
 @Component({
@@ -14,6 +14,7 @@ import {AuthService} from "../_services/auth.service";
 export class TodoComponent implements OnInit {
   initialState!: ITodo;
   sharedTodo!: ITodo;
+  sharedTodoId: string | undefined
   allSubs: Subscription | undefined
   displayedColumns: string[] = ['position', 'task', 'actions'];
   isLoading: boolean = true;
@@ -31,7 +32,7 @@ export class TodoComponent implements OnInit {
   ngOnInit(): void {
     const todo$ = this.route.paramMap.pipe(
       switchMap(params => {
-        const todoId = params.get('todoId')
+        const todoId = this.sharedTodoId = params.get('todoId') as string
         return this.todosService.getSharedTodoOwnerId(todoId as string)
       }),
       switchMap((response: Record<string, ISharedTodo>) => {
@@ -42,7 +43,6 @@ export class TodoComponent implements OnInit {
     )
       .subscribe({
         next: (response) => {
-          console.log('todo', response)
           this.sharedTodo = this.initialState = response
           this.isWriteable = this.sharedTodo.writeable
           this.isLoading = false
@@ -57,16 +57,16 @@ export class TodoComponent implements OnInit {
 
   }
 
-  click() {
-    return this.todosService.getSharedTodoOwnerId('-MpQsltPzoXyPAz5lZcl')
-      .pipe(
-        mergeMap((response: Record<string, ISharedTodo>): Observable<any> => {
-          const todoId = Object.keys(response).toString()
-          const user_id = Object.entries(response)[0][1].user_id
-          return this.todosService.getSharedTodoByOwnerId(todoId, user_id)
-        })
-      ).subscribe(console.log)
-    // this.listService.getAllShared().subscribe(response => console.log('QQQ', response))
+  createTaskHandler(taskName: string) {
+    const task: ITask = {
+      title: taskName,
+      isDone: false
+    }
+    this.sharedTodo.tasks = {
+      ...this.sharedTodo.tasks,
+      task
+    }
+    this.alert.success('Task added')
   }
 
 }

@@ -40,6 +40,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ObjIsEmptyPipe} from './shared/pipes/obj-is-empty.pipe';
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {DelColumnsPipe} from './shared/pipes/del-columns.pipe';
+import {AddTaskFormComponent} from './add-task-form/add-task-form.component';
 
 const matSnackbarDefaultConfig: MatSnackBarConfig = {
   "verticalPosition": 'bottom',
@@ -77,6 +78,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
     LoaderComponent,
     ObjIsEmptyPipe,
     DelColumnsPipe,
+    AddTaskFormComponent,
   ],
   imports: [
     BrowserAnimationsModule,
