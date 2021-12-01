@@ -75,7 +75,6 @@ export class TodosComponent implements OnInit, OnDestroy {
       isShared: false,
       writeable: false,
     }
-
     this.todosService.createTodo(todo).subscribe({
       next: ({name: todoId}) => {
         if (todoId) {
@@ -135,7 +134,15 @@ export class TodosComponent implements OnInit, OnDestroy {
           this.todos[todoId].tasks = {...this.todos[todoId].tasks, ...newTask}
           this.alert.success('Task added')
         })
+      this.logger(todoId)
     }
+  }
+
+  logger(todoId: string) {
+    return this.todosService.patchTodo(this.userId, todoId, {
+      last_modify_user_id: this.userId,
+      last_modify_date: new Date()
+    } as ITodo).subscribe()
   }
 
   deleteTaskHandler(todoId: string, taskId: string) {
@@ -146,18 +153,21 @@ export class TodosComponent implements OnInit, OnDestroy {
         this.todos[todoId].tasks = {...newTaskState}
         this.alert.success('Task deleted successfully')
       },
-      error: () => this.alert.error('Task deleted failed')
+      error: () => this.alert.error('Task deleted failed'),
+      complete: () => this.logger(todoId)
     })
   }
 
   closeTaskHandler(todoId: string, taskId: string) {
     this.todosService.finishTask(todoId, taskId).subscribe({
-      next: () => {
-        const newTaskState = this.todos[todoId].tasks
-        newTaskState[taskId] = {...newTaskState[taskId], isDone: true}
-        this.todos[todoId].tasks = {...newTaskState}
+        next: () => {
+          const newTaskState = this.todos[todoId].tasks
+          newTaskState[taskId] = {...newTaskState[taskId], isDone: true}
+          this.todos[todoId].tasks = {...newTaskState}
+        },
+        complete: () => this.logger(todoId)
       }
-    })
+    )
   }
 
   changeShareAccessTypeHandler(todoId: string, writeable: boolean) {
