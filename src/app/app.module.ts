@@ -41,6 +41,9 @@ import {ObjIsEmptyPipe} from './shared/pipes/obj-is-empty.pipe';
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {DelColumnsPipe} from './shared/pipes/del-columns.pipe';
 import {AddTaskFormComponent} from './add-task-form/add-task-form.component';
+import {MergeTodoComponent} from './components/merge-todo/merge-todo.component';
+import {MatDialogModule} from "@angular/material/dialog";
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 const matSnackbarDefaultConfig: MatSnackBarConfig = {
   "verticalPosition": 'bottom',
@@ -79,6 +82,7 @@ const INTERCEPTOR_PROVIDER: Provider = {
     ObjIsEmptyPipe,
     DelColumnsPipe,
     AddTaskFormComponent,
+    MergeTodoComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -104,7 +108,9 @@ const INTERCEPTOR_PROVIDER: Provider = {
     MatTableModule,
     MatProgressSpinnerModule,
     MatSlideToggleModule,
-    ClipboardModule
+    ClipboardModule,
+    MatDialogModule,
+    DragDropModule
   ],
   providers: [
     SNACKBAR_PROVIDER,

@@ -10,12 +10,14 @@ import {PageErrorComponent} from "./page-error/page-error.component";
 import {ProfileComponent} from "./profile/profile.component";
 import {AuthGuard} from "./shared/auth.guard";
 import {TodoComponent} from "./todo/todo.component";
+import {MergeTodoComponent} from "./components/merge-todo/merge-todo.component";
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 't/:todoId', component: TodoComponent, canActivate: [AuthGuard]},
   {path: 't', redirectTo: '/', pathMatch: 'full'},
   {path: 'about', component: AboutComponent},
+  {path: 'merge', component: MergeTodoComponent},
   {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]},
   {
     path: 'auth', component: AuthComponent, children: [
