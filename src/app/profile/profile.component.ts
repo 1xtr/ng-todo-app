@@ -35,12 +35,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   }
 
-  inputHandler(event: Event) {
-    this.userNewName = (<HTMLInputElement>event.target).value
-  }
+  // inputHandler(event: Event) {
+  //   this.userNewName = (<HTMLInputElement>event.target).value
+  // }
 
   updateUserName() {
-    console.log('update')
     this.inputNameFieldDisabled = true
     const uSub = this.userService.changeUserInfo(this.userNewName)
       .subscribe({
