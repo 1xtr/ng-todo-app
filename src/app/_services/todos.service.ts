@@ -29,17 +29,6 @@ export class TodosService {
       )
   }
 
-  // getAllListsByUserId(userId: string = ''): Observable<Record<string, ITodoList>> {
-  //   // console.log('get all by user id: ', userId)
-  //   this.store.isLoading$.next(true)
-  //   return this.http.get<FBObjData<ITodoList>>(
-  //     `${environment.FB_TODOS_DB_URL}/${this.user_id}.json?orderBy="owner_id"&equalTo="${userId}"`
-  //   )
-  //     .pipe(
-  //       first()
-  //     )
-  // }
-
   createTodo(todo: ITodo): Observable<IFBPostResponse> {
     return this.http.post<IFBPostResponse>(
       `${environment.FB_TODOS_DB_URL}/${this.user_id}.json`,
@@ -120,7 +109,6 @@ export class TodosService {
   }
 
   getSharedTodoOwnerId(todoId: string): Observable<Record<string, ISharedTodo>> {
-    // return this.http.get<ISharedTodo>(`${environment.FB_SHARED_DB_URL}/${todoId}.json`)
     return this.http.get<Record<string, ISharedTodo>>(`${environment.FB_SHARED_DB_URL}.json?orderBy="$key"&equalTo="${todoId}"`)
   }
 
@@ -130,11 +118,28 @@ export class TodosService {
 
   logAccess(todoId: string, user_id: string) {
     this.patchTodo(user_id, todoId, {data: new Date(), user_id})
-
   }
 
   getAllShared(): Observable<ISharedTodo> {
     return this.http.get<ISharedTodo>(`${environment.FB_SHARED_DB_URL}.json`)
+  }
+
+  transformObjToArr<T>(source: Record<string, T>, keyAsLiteral: string = 'id'): T[] {
+    return Object.keys(source)
+      .map(key => ({
+        ...source[key],
+        [keyAsLiteral]: key
+      }))
+  }
+
+  transformArrToObj(source: ITask[], fieldNameToKey: keyof ITask = 'id'): Record<string, ITask> {
+    const result: Record<string, ITodo> = {}
+    for (const task of source) {
+      Object.assign(result, {
+        [task[fieldNameToKey] as string]: {...task}
+      })
+    }
+    return result
   }
 
 
