@@ -1,0 +1,53 @@
+<h1 mat-dialog-title>Drag'n'drop task for save</h1>
+<div class="xtr-compare-container">
+  <div mat-dialog-content cdkDropListGroup>
+    <!--    REMOTE TASKS START   -->
+    <div class="example-container">
+      <h2>Remote tasks</h2>
+      <div
+        id="remote"
+        cdkDropList
+        cdkDropListSortingDisabled
+        cdkDropListConnectedTo="local"
+        [cdkDropListData]="data.remote"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box"
+             *ngFor="let remoteTask of data.remote"
+             [cdkDragData]="remoteTask"
+             cdkDrag
+             [cdkDragDisabled]="remoteTask.isDisabled"
+        >
+          {{remoteTask.id}}: {{remoteTask.isDone}}
+        </div>
+      </div>
+    </div>
+    <!--    REMOTE TASKS END   -->
+
+    <!--    LOCAL TASKS START   -->
+    <div class="example-container">
+      <h2>Tasks to save</h2>
+      <div
+        id="local"
+        cdkDropList
+        cdkDropListSortingDisabled
+        cdkDropListConnectedTo="remote"
+        [cdkDropListData]="data.local"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        <!--        [cdkDropListEnterPredicate]="evenPredicate"-->
+        <div class="example-box"
+             *ngFor="let localTask of data.local"
+             [cdkDragData]="localTask"
+             cdkDrag
+             [cdkDragDisabled]="localTask.isDisabled"
+        >{{localTask.id}}: {{localTask.isDone}}</div>
+      </div>
+    </div>
+    <!--    LOCAL TASKS END   -->
+  </div>
+</div>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="data.local" cdkFocusInitial>Save</button>
+</mat-dialog-actions>
