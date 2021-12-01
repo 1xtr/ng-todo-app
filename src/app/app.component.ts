@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AuthService} from "./_services/auth.service";
 
 @Component({
@@ -12,6 +12,8 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.auth.refreshSession()
+    setTimeout(() => {
+      this.auth.refreshSession()
+    }, 29 * 60 * 1000)
   }
 }
