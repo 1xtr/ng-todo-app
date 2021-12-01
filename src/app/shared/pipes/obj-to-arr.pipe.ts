@@ -1,14 +1,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {FBObjData, ITodo} from "../Interfaces";
 
 @Pipe({
   name: 'FBObjToArr'
 })
 export class ObjToArrPipe implements PipeTransform {
 
-  objToArr<T>(source: { [key: string]: T}): T[] {
+  objToArr<T>(source: Record<string, T>): T[] {
     if (!Object.keys(source).length) {
-        return []
+      return []
     }
     return Object
       .keys(source)
@@ -21,8 +20,8 @@ export class ObjToArrPipe implements PipeTransform {
       })
   }
 
-  transform(source: FBObjData<ITodo>): ITodo[] {
-    return this.objToArr<ITodo>(source)
+  transform<T>(source: Record<string, T>): any {
+    return this.objToArr(source)
   }
 
 }
