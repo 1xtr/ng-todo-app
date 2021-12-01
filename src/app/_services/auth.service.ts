@@ -118,17 +118,15 @@ export class AuthService {
   }
 
   refreshSession() {
-    if (!this.isAuthenticated()) {
-      this.refreshToken().subscribe({
-          next: (response) => {
-            this.setToken(response)
-          },
-          error: (err) => {
-            console.log('Refresh token error', err)
-          }
+    this.refreshToken().subscribe({
+        next: (response) => {
+          this.setToken(response)
+        },
+        error: (err) => {
+          console.log('Refresh token error', err)
         }
-      )
-    }
+      }
+    )
   }
 
   sendForgotPassword(email: string): Observable<IForgotPasswordResponseData> {
