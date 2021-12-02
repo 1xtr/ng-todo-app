@@ -12,6 +12,9 @@
           "/manifest.webmanifest",
           "/*.css",
           "/*.js"
+        ],
+        "urls": [
+          "https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap"
         ]
       }
     },
@@ -24,6 +27,18 @@
           "/assets/**",
           "/*.(svg|cur|jpg|jpeg|png|apng|webp|avif|gif|otf|ttf|woff|woff2)"
         ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "firebase-data",
+      "urls": [
+        "https://test-project-67b13-default-rtdb.europe-west1.firebasedatabase.app/angular-todo-app/**"
+      ],
+      "cacheConfig": {
+        "maxSize": 5,
+        "maxAge": "3600"
       }
     }
   ]

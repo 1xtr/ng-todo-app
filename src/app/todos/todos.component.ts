@@ -25,7 +25,6 @@ export class TodosComponent implements OnInit, OnDestroy {
   })
   todos!: Record<string, ITodo>
   tasks: ITask[] | undefined
-  // createTaskForm: FormGroup = new FormGroup({})
   displayedColumns: string[] = ['position', 'task', 'actions'];
   isLoading: boolean = true;
   shareActionsToggle: boolean = false;
@@ -47,9 +46,6 @@ export class TodosComponent implements OnInit, OnDestroy {
       },
       complete: () => {
         this.store.isLoading$.next(false)
-        // if (this.todos) {
-        //   Object.keys(this.todos).map((key) => this.addTaskNameField(key))
-        // }
       }
     })
 
