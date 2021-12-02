@@ -7,7 +7,7 @@ import {AuthService} from "./_services/auth.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit{
-  title = 'Angular first app!';
+  title = 'bitworks-test';
   constructor(private auth: AuthService) {
   }
 
